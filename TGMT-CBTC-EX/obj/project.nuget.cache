@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "Snig6KOLkm275fwc+HryIEBBxDNojqnqMrN8EUcROPadBIafCjUetLN3yYcOrnUEduimCWW/ofvCq3FzqecxfQ==",
+  "success": true,
+  "projectFilePath": "D:\\apps\\VSproject\\bve\\Casco\\TGMT-CBTC-EX\\TGMT-CBTC-EX.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\frank\\.nuget\\packages\\atsex.coreextensions\\1.0.0-rc1\\atsex.coreextensions.1.0.0-rc1.nupkg.sha512",
+    "C:\\Users\\frank\\.nuget\\packages\\atsex.pluginhost\\1.0.0-rc3\\atsex.pluginhost.1.0.0-rc3.nupkg.sha512",
+    "C:\\Users\\frank\\.nuget\\packages\\lib.harmony\\2.2.2\\lib.harmony.2.2.2.nupkg.sha512",
+    "C:\\Users\\frank\\.nuget\\packages\\objectiveharmonypatch\\1.0.0\\objectiveharmonypatch.1.0.0.nupkg.sha512",
+    "C:\\Users\\frank\\.nuget\\packages\\slimdx\\4.0.13.44\\slimdx.4.0.13.44.nupkg.sha512",
+    "C:\\Users\\frank\\.nuget\\packages\\unembeddedresources\\1.0.0\\unembeddedresources.1.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
