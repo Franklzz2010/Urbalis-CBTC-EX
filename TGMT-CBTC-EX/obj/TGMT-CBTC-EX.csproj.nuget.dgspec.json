@@ -1,0 +1,164 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\apps\\VSproject\\bve\\Casco\\TGMT-CBTC-EX\\TGMT-CBTC-EX.csproj": {}
+  },
+  "projects": {
+    "D:\\apps\\VSproject\\bve\\Casco\\TGMT-CBTC-EX\\TGMT-CBTC-EX.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\apps\\VSproject\\bve\\Casco\\TGMT-CBTC-EX\\TGMT-CBTC-EX.csproj",
+        "projectName": "TGMT-CBTC-EX",
+        "projectPath": "D:\\apps\\VSproject\\bve\\Casco\\TGMT-CBTC-EX\\TGMT-CBTC-EX.csproj",
+        "packagesPath": "C:\\Users\\frank\\.nuget\\packages\\",
+        "outputPath": "D:\\apps\\VSproject\\bve\\Casco\\TGMT-CBTC-EX\\obj\\",
+        "projectStyle": "PackageReference",
+        "skipContentFileWrite": true,
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\frank\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net48"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net48": {
+            "projectReferences": {
+              "D:\\apps\\VSproject\\bve\\Casco\\TGMT-CBTC-EX_WCU\\TGMT-CBTC-EX_WCU.csproj": {
+                "projectPath": "D:\\apps\\VSproject\\bve\\Casco\\TGMT-CBTC-EX_WCU\\TGMT-CBTC-EX_WCU.csproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "net48": {
+          "dependencies": {
+            "AtsEx.CoreExtensions": {
+              "target": "Package",
+              "version": "[1.0.0-rc1, )"
+            },
+            "AtsEx.PluginHost": {
+              "target": "Package",
+              "version": "[1.0.0-rc3, )"
+            },
+            "Lib.Harmony": {
+              "target": "Package",
+              "version": "[2.2.2, )"
+            },
+            "ObjectiveHarmonyPatch": {
+              "target": "Package",
+              "version": "[1.0.0, )"
+            },
+            "SlimDX": {
+              "target": "Package",
+              "version": "[4.0.13.44, )"
+            },
+            "UnembeddedResources": {
+              "target": "Package",
+              "version": "[1.0.0, )"
+            }
+          }
+        }
+      },
+      "runtimes": {
+        "win": {
+          "#import": []
+        },
+        "win-arm64": {
+          "#import": []
+        },
+        "win-x64": {
+          "#import": []
+        },
+        "win-x86": {
+          "#import": []
+        }
+      }
+    },
+    "D:\\apps\\VSproject\\bve\\Casco\\TGMT-CBTC-EX_WCU\\TGMT-CBTC-EX_WCU.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\apps\\VSproject\\bve\\Casco\\TGMT-CBTC-EX_WCU\\TGMT-CBTC-EX_WCU.csproj",
+        "projectName": "TGMT-CBTC-EX_WCU",
+        "projectPath": "D:\\apps\\VSproject\\bve\\Casco\\TGMT-CBTC-EX_WCU\\TGMT-CBTC-EX_WCU.csproj",
+        "packagesPath": "C:\\Users\\frank\\.nuget\\packages\\",
+        "outputPath": "D:\\apps\\VSproject\\bve\\Casco\\TGMT-CBTC-EX_WCU\\obj\\",
+        "projectStyle": "PackageReference",
+        "skipContentFileWrite": true,
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\frank\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net48"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net48": {
+            "projectReferences": {}
+          }
+        }
+      },
+      "frameworks": {
+        "net48": {
+          "dependencies": {
+            "AtsEx.CoreExtensions": {
+              "target": "Package",
+              "version": "[1.0.0-rc1, )"
+            },
+            "AtsEx.PluginHost": {
+              "target": "Package",
+              "version": "[1.0.0-rc3, )"
+            },
+            "Lib.Harmony": {
+              "target": "Package",
+              "version": "[2.2.2, )"
+            },
+            "ObjectiveHarmonyPatch": {
+              "target": "Package",
+              "version": "[1.0.0, )"
+            },
+            "SlimDX": {
+              "target": "Package",
+              "version": "[4.0.13.44, )"
+            },
+            "UnembeddedResources": {
+              "target": "Package",
+              "version": "[1.0.0, )"
+            }
+          }
+        }
+      },
+      "runtimes": {
+        "win": {
+          "#import": []
+        },
+        "win-arm64": {
+          "#import": []
+        },
+        "win-x64": {
+          "#import": []
+        },
+        "win-x86": {
+          "#import": []
+        }
+      }
+    }
+  }
+}
