@@ -46,6 +46,7 @@ namespace TGMTAts.OBCU {
             life = new Bitmap(Path.Combine(imgDir, "life.png"));
             distance = new Bitmap(Path.Combine(imgDir, "distance.png"));
             msg = new Bitmap(Path.Combine(imgDir, "msg_history.png"));
+            rmpanel = new Bitmap(Path.Combine(imgDir, "rmpanel.png"));
 
             drawFont = new System.Drawing.Font("思源黑体 CN Bold", 30);
             timeFont = new System.Drawing.Font("思源黑体 CN Bold", 15);
@@ -76,6 +77,10 @@ namespace TGMTAts.OBCU {
             hHMI.BeginGDI();
             hHMI.DrawImage(hmi, 0, 0);
 
+            if (TGMTAts.driveMode == 0)
+            {
+                hHMI.DrawImage(rmpanel, 138, 73);
+            }
 
             if (TGMTAts.panel_[102] != 0)
             {
@@ -319,78 +324,6 @@ namespace TGMTAts.OBCU {
             hHMI.Graphics.DrawString("终点站", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), destStationDisplayX, 20, stringC);
             hHMI.Graphics.DrawString("下一站", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), nextStationDisplayX, 20, stringC);
 
-            //终点站显示
-            /*if (TGMTAts.DestinationNumber == 0)
-            {
-                hHMI.Graphics.DrawString("日本橋存", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), destStationDisplayX, destStationDisplayY,stringC);
-            }
-            else if (TGMTAts.DestinationNumber == 1)
-            {
-                hHMI.Graphics.DrawString("押上", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), destStationDisplayX, destStationDisplayY, stringC);
-            }
-
-            //下一站显示
-            if (TGMTAts.nextStationNumber == 14)
-            {
-                hHMI.Graphics.DrawString("高砂", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), nextStationDisplayX, nextStationDisplayY, stringC);
-            }
-            else if (TGMTAts.nextStationNumber == 13)
-            {
-                hHMI.Graphics.DrawString("青砥", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), nextStationDisplayX, nextStationDisplayY, stringC);
-            }
-            else if (TGMTAts.nextStationNumber == 12)
-            {
-                hHMI.Graphics.DrawString("立石", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), nextStationDisplayX, nextStationDisplayY, stringC);
-            }
-            else if (TGMTAts.nextStationNumber == 11)
-            {
-                hHMI.Graphics.DrawString("四ツ木", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), nextStationDisplayX, nextStationDisplayY, stringC);
-            }
-            else if (TGMTAts.nextStationNumber == 10)
-            {
-                hHMI.Graphics.DrawString("八広", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), nextStationDisplayX, nextStationDisplayY, stringC);
-            }
-            else if (TGMTAts.nextStationNumber == 9)
-            {
-                hHMI.Graphics.DrawString("曳舟", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), nextStationDisplayX, nextStationDisplayY, stringC);
-            }
-            else if (TGMTAts.nextStationNumber == 8)
-            {
-                hHMI.Graphics.DrawString("押上", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), nextStationDisplayX, nextStationDisplayY, stringC);
-            }
-            else if (TGMTAts.nextStationNumber == 7)
-            {
-                hHMI.Graphics.DrawString("本所吾妻橋", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), nextStationDisplayX, nextStationDisplayY, stringC);
-            }
-            else if (TGMTAts.nextStationNumber == 6)
-            {
-                hHMI.Graphics.DrawString("浅草", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), nextStationDisplayX, nextStationDisplayY, stringC);
-            }
-            else if (TGMTAts.nextStationNumber == 5)
-            {
-                hHMI.Graphics.DrawString("蔵前", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), nextStationDisplayX, nextStationDisplayY, stringC);
-            }
-            else if (TGMTAts.nextStationNumber == 4)
-            {
-                hHMI.Graphics.DrawString("浅草橋", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), nextStationDisplayX, nextStationDisplayY, stringC);
-            }
-            else if (TGMTAts.nextStationNumber == 3)
-            {
-                hHMI.Graphics.DrawString("東日本橋", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), nextStationDisplayX, nextStationDisplayY, stringC);
-            }
-            else if (TGMTAts.nextStationNumber == 2)
-            {
-                hHMI.Graphics.DrawString("人形町", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), nextStationDisplayX, nextStationDisplayY, stringC);
-            }
-            else if (TGMTAts.nextStationNumber == 1)
-            {
-                hHMI.Graphics.DrawString("日本橋", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), nextStationDisplayX, nextStationDisplayY, stringC);
-            }
-            else if (TGMTAts.nextStationNumber == 0)
-            {
-                hHMI.Graphics.DrawString("日本橋存", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), nextStationDisplayX, nextStationDisplayY, stringC);
-            }*/
-
             return hHMI;
         }
 
@@ -468,7 +401,7 @@ namespace TGMTAts.OBCU {
         static Brush[] targetColor = new Brush[] { new SolidBrush(Color.Red), new SolidBrush(Color.Orange), new SolidBrush(Color.Green) };
         static Brush[] overspeed = new Brush[] { new SolidBrush(Color.Empty), new SolidBrush(Color.Orange), new SolidBrush(Color.Red) };
         static Bitmap hmi, ackcmd, atoctrl, dormode, dorrel, drvmode, emergency, fault, departure, menu,
-            selmode, sigmode, special, stopsig, num0, numn0, colon, hmitdt, life, distance, msg;
+            selmode, sigmode, special, stopsig, num0, numn0, colon, hmitdt, life, distance, msg, rmpanel;
         static Bitmap tdtbackoff, tdtbackred, tdtbackgreen;
         static Image tdtdigitsred, tdtdigitsgreen;
         //static Bitmap tdtdigitsred, tdtdigitsgreen;

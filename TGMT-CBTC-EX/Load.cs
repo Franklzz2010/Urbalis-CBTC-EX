@@ -26,9 +26,9 @@ namespace TGMTAts.OBCU {
 
         public static List<string> debugMessages = new List<string>();
 
-        // 0: RM; 1: SM-I; 2: SM-C; 3: AM-I; 4: AM-C; 5: XAM
+        // 0: RM; 1: CM-ITC; 2: CM-CBTC; 3: AM-ITC; 4: AM-CBTC; 5: XAM
         public static int selectedMode = 4;
-        // 0: RM; 1: SM; 2: AM; 3: XAM
+        // 0: RM; 1: CM; 2: AM; 3: XAM
         public static int driveMode = 1;
         // 0: IXL; 1: ITC; 2: CTC
         public static int signalMode = 2;
