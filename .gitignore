@@ -2,4 +2,8 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/test.txt
+/.vs/
+/TGMT-CBTC-EX/bin
+/TGMT-CBTC-EX/obj
+/TGMT-CBTC-EX_WCU/bin
+/TGMT-CBTC-EX_WCU/obj
