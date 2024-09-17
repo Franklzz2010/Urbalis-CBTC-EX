@@ -416,15 +416,20 @@ namespace TGMTAts.OBCU {
                     }
                     
                 }
-               
 
-                // 显示紧急制动、目标距离0、速度0
-                panel_[10] = 2;
-                panel_[29] = 2;
-                panel_[11] = 0;
-                panel_[19] = 0;
-                panel_[17] = 0;
-                bCommand = Math.Max(bCommand, handles.Brake.EmergencyBrakeNotch);
+
+               
+                if (state.Speed != 0)
+                {
+                    // 显示紧急制动、目标距离0、速度0
+                    panel_[10] = 2;
+                    panel_[29] = 2;
+                    panel_[11] = 0;
+                    panel_[19] = 0;
+                    panel_[17] = 0;
+                    bCommand = Math.Max(bCommand, handles.Brake.EmergencyBrakeNotch);
+                }
+
             }
 
             // 防溜、车门零速保护
