@@ -46,7 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ato.cs" />
-    <Compile Include="iniRead.cs" />
+    <Compile Include="IniRead.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -70,6 +70,7 @@
       <DependentUpon>DebugWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="UserInterface\GDIWrapper.cs" />
+    <Compile Include="UserInterface\Msg.cs" />
     <Compile Include="UserInterface\TGMTPainter.cs" />
   </ItemGroup>
   <ItemGroup>

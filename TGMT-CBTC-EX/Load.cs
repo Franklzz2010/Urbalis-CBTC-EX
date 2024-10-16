@@ -13,6 +13,7 @@ using AtsEx.PluginHost.Input.Native;
 using SlimDX.DirectInput;
 using System.Security.Cryptography;
 using System.Text;
+using TGMTAts.OBCU.UserInterface;
 
 namespace TGMTAts.OBCU {
     public partial class TGMTAts : AssemblyPluginBase {
@@ -68,6 +69,11 @@ namespace TGMTAts.OBCU {
 
         public static TextureHandle hTDTTex;
         public static TextureHandle hHMITex;
+        public static TextureHandle hHMI2Tex;
+
+        public Msg msg1 = new Msg();
+        public Msg msg2 = new Msg();
+        public Msg msg3 = new Msg();
 
         static TGMTAts() {
             Config.Load(Path.Combine(Config.PluginDir, "TGMTConfig.txt"));
@@ -88,10 +94,14 @@ namespace TGMTAts.OBCU {
                 TGMTPainter.Initialize();
                 hHMITex = TextureManager.Register(Config.HMIImageSuffix, 1024, 1024);
                 hTDTTex = TextureManager.Register(Config.TDTImageSuffix, 256, 256);
+                hHMI2Tex = TextureManager.Register(Config.HMI2ImageSuffix, 1024, 1024);
             } catch (Exception ex) {
                 MessageBox.Show(ex.ToString());
             }
-    }
+
+            TGMTPainter.voltage = 1350;
+        }
+
 
         private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args) {
             if (args.Name.Contains("Harmony")) {
@@ -127,6 +137,7 @@ namespace TGMTAts.OBCU {
             TGMTPainter.Dispose();
             hHMITex.Dispose();
             hTDTTex.Dispose();
+            hHMI2Tex.Dispose();
 
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.A1].Pressed -= OnA1Pressed;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.B1].Pressed -= OnB1Pressed;

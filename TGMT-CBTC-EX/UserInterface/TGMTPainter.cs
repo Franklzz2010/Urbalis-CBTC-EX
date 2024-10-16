@@ -12,6 +12,10 @@ using System.Windows.Forms;
 using Zbx1425.DXDynamicTexture;
 using System.Collections;
 using System.Runtime.InteropServices.ComTypes;
+using BveTypes.ClassWrappers;
+using AtsEx.PluginHost;
+using AtsEx.PluginHost.Handles;
+using TGMTAts.OBCU.UserInterface;
 
 namespace TGMTAts.OBCU {
 
@@ -19,14 +23,16 @@ namespace TGMTAts.OBCU {
 
         public static string INIPath = Convert.ToString(Path.Combine(Config.PluginDir, "StationList.ini"));
 
-        public static GDIHelper hHMI, hTDT;
+        public static GDIHelper hHMI, hTDT, hHMI2;
+
         public static void Initialize() {
             var imgDir = Config.ImageAssetPath;
 
             hHMI = new GDIHelper(1024, 1024);
             hTDT = new GDIHelper(256, 256);
-            
-            
+            hHMI2 = new GDIHelper(1024, 1024);
+
+
 
             hmi = new Bitmap(Path.Combine(imgDir, "hmi.png"));
             ackcmd = new Bitmap(Path.Combine(imgDir, "msg.png"));
@@ -51,6 +57,7 @@ namespace TGMTAts.OBCU {
             drawFont = new System.Drawing.Font("思源黑体 CN Bold", 30);
             timeFont = new System.Drawing.Font("思源黑体 CN Bold", 15);
             distanceFont = new System.Drawing.Font("思源黑体 CN Bold", 16);
+            hmi2Font = new System.Drawing.Font("思源黑体 CN Bold", 10);
 
             num0 = new Bitmap(Path.Combine(imgDir, "num0.png"));
             numn0 = new Bitmap(Path.Combine(imgDir, "num-0.png"));
@@ -64,13 +71,23 @@ namespace TGMTAts.OBCU {
             tdtdigitsgreen = Image.FromFile(Path.Combine(imgDir, "tdt_digits_green.png"));
             //tdtdigitsred =new Bitmap(Path.Combine(imgDir, "tdt_digits_red.png"));
             //tdtdigitsgreen = new Bitmap(Path.Combine(imgDir, "tdt_digits_green.png"));
+
+            hmi2 = new Bitmap(Path.Combine(imgDir, "hmi2.png"));
+            dooropenleft = new Bitmap(Path.Combine(imgDir, "dorleft.png"));
+            dooropenright = new Bitmap(Path.Combine(imgDir, "dorright.png"));
+            trainkey = new Bitmap(Path.Combine(imgDir, "key.png"));
+            traindir1 = new Bitmap(Path.Combine(imgDir, "dir1.png"));
+            traindir2 = new Bitmap(Path.Combine(imgDir, "dir2.png"));
+
+
         }
 
         public static void Dispose() {
             hHMI.Dispose();
             hTDT.Dispose();
+            hHMI2.Dispose();
         }
-        static int counter = 0;
+        public static int counter = 0;
 
 
         public static GDIHelper PaintHMI(AtsEx.PluginHost.Native.VehicleState state) {
@@ -104,7 +121,7 @@ namespace TGMTAts.OBCU {
                 hHMI.DrawImage(msg, 115, 501, TGMTAts.msgContext2 * 18, 18);
                 hHMI.DrawImage(msg, 115, 522, TGMTAts.msgContext3 * 18, 18);
             }
-
+            
 
 
             hHMI.DrawImage(menu, 551, 520, TGMTAts.panel_[23] * 64, 64);
@@ -324,6 +341,32 @@ namespace TGMTAts.OBCU {
             hHMI.Graphics.DrawString("终点站", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), destStationDisplayX, 20, stringC);
             hHMI.Graphics.DrawString("下一站", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), nextStationDisplayX, 20, stringC);
 
+            int nextStationDistance = StationManager.NextStation.StopPosition - Convert.ToInt32(state.Location);
+
+            double dis = Math.Round(Convert.ToDouble(nextStationDistance), 1);
+            string disF = dis.ToString("0");
+            bool arrived = false;
+
+            if (state.Speed == 0 && ( (Math.Abs(dis) <= Config.DoorEnableWindow) || StationManager.Stopped) )
+            {
+                arrived= true;
+            }
+            else if (StationManager.Arrived && TGMTAts.panel_[106] == 0)
+            {
+                arrived = true;
+            }
+            else if (state.Location > StationManager.NextStation.StopPosition + Config.StationEndDistance)
+            {
+                arrived = true;
+            }
+
+            if (nextStationDistance <= 400 && nextStationDistance >= -5 && !StationManager.NextStation.Pass && !arrived)
+            {
+                hHMI.Graphics.DrawString("距下站", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 430, 308, stringC);
+                hHMI.Graphics.DrawString(disF + "m", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 430, 333, stringC);
+            }
+
+
             return hHMI;
         }
 
@@ -368,6 +411,251 @@ namespace TGMTAts.OBCU {
             return hTDT;
         }
 
+        public static int voltage;
+        
+
+        public static GDIHelper PaintHMI2(AtsEx.PluginHost.Native.VehicleState state, AtsEx.PluginHost.Handles.HandleSet handles)
+        {
+            var stringC = new StringFormat();
+            stringC.Alignment = StringAlignment.Center;
+
+            hHMI2.BeginGDI();
+            hHMI2.DrawImage(hmi2, 0, 0);
+
+            if (TGMTAts.doorOpen)
+            {
+                switch (StationManager.NextStation.DoorOpenType)
+                {
+                    case 1:
+                        hHMI2.DrawImage(dooropenleft, 121, 305); 
+                        break;
+                    case 2:
+                        hHMI2.DrawImage(dooropenright, 118, 218);
+                        break;
+                }
+            }
+
+            string trainDirection = "?";
+            string handlePos = "?";
+            int dirpos = 0;
+            string trainsigmode = "?";
+            string traindrvmode = "?";
+            string traindormode = "?";
+            string trainselmode = "?";
+
+
+            switch (handles.Reverser.Position)
+            {
+                case ReverserPosition.B:
+                    trainDirection = "后";
+                    dirpos = -1;
+                    break;
+                case ReverserPosition.N:
+                    trainDirection = "0";
+                    dirpos = 0;
+                    break;
+                case ReverserPosition.F:
+                    trainDirection = "前";
+                    dirpos = 1;
+                    break;
+            }
+
+            if (handles.Power.Notch > 0)
+            {
+                switch (handles.Power.Notch)
+                {
+                    case 1:
+                        handlePos = "P1";
+                        break;
+                    case 2:
+                        handlePos = "P2";
+                        break;
+                    case 3:
+                        handlePos = "P3";
+                        break;
+                    case 4:
+                        handlePos = "P4";
+                        break;
+                }
+            }
+            else
+            {
+                switch (handles.Brake.Notch)
+                {
+                    case 0:
+                        handlePos = "0";
+                        break;
+                    case 1:
+                        handlePos = "B1";
+                        break;
+                    case 2:
+                        handlePos = "B2";
+                        break;
+                    case 3:
+                        handlePos = "B3";
+                        break;
+                    case 4:
+                        handlePos = "B4";
+                        break;
+                    case 5:
+                        handlePos = "B5";
+                        break;
+                    case 6:
+                        handlePos = "B6";
+                        break;
+                    case 7:
+                        handlePos = "B7";
+                        break;
+                    case 8:
+                        handlePos = "EB";
+                        break;
+                }
+            }
+
+            switch (TGMTAts.signalMode)
+            {
+                case 0:
+                    trainsigmode = "IXL";
+                    traindormode = "MM";
+                    break;
+                case 1:
+                    trainsigmode = "ITC";
+                    traindormode = "AA";
+                    break;
+                case 2:
+                    trainsigmode = "CBTC";
+                    traindormode = "AA";
+                    break;
+            }
+
+            switch (TGMTAts.driveMode)
+            {
+                case 0:
+                    traindrvmode = "RM";
+                    break;
+                case 1:
+                    traindrvmode = "CM";
+                    break;
+                case 2:
+                    traindrvmode = "AM";
+                    break;
+            }
+
+            string trainmode = trainsigmode + "-" + traindrvmode + "-" + traindormode;
+
+            switch (TGMTAts.selectedMode)
+            {
+                case 0:
+                    trainselmode = "RM";
+                    break;
+                case 1:
+                    trainselmode = "CM-ITC";
+                    break;
+                case 2:
+                    trainselmode = "CM-CBTC";
+                    break;
+                case 3:
+                    trainselmode = "AM-ITC";
+                    break;
+                case 4:
+                    trainselmode = "AM-CBTC";
+                    break;
+            }
+
+            switch (dirpos)
+            {
+                case -1:
+                    hHMI2.DrawImage(trainkey, 119, 166);
+                    hHMI2.DrawImage(traindir2, 709, 158);
+                    break;
+                case 0:
+                    break;
+                case 1:
+                    hHMI2.DrawImage(trainkey, 119, 166);
+                    hHMI2.DrawImage(traindir1, 59, 158);
+                    break;
+            }
+
+            hHMI2.EndGDI();
+
+            var second = Convert.ToInt32(state.Time.TotalMilliseconds) / 1000 % 60;
+            var minute = Convert.ToInt32(state.Time.TotalMilliseconds) / 1000 / 60 % 60;
+            var hour = Convert.ToInt32(state.Time.TotalMilliseconds) / 1000 / 3600 % 60;
+
+            var hh = Convert.ToString(hour);
+            var mm = Convert.ToString(minute);
+            var ss = Convert.ToString(second);
+            hh = hh.PadLeft(2, '0');
+            mm = mm.PadLeft(2, '0');
+            ss = ss.PadLeft(2, '0');
+
+            FilesINI ConfigINI = new FilesINI();
+            string stationNameStr = ConfigINI.INIRead("station", Convert.ToString(TGMTAts.nextStationNumber), INIPath);
+            string destStationNameStr = ConfigINI.INIRead("station", Convert.ToString(TGMTAts.DestinationNumber), INIPath);
+
+
+
+            double speed = Math.Round(Convert.ToDouble(state.Speed), 1);
+            string speedF = speed.ToString("0.0");
+
+            double ampere = Math.Round(Convert.ToDouble(state.Current), 1);
+            string ampereF = ampere.ToString("0.0");
+
+            string trainnumberStr = Convert.ToString(TGMTAts.TrainNumber);
+
+            string tgspeed = "?";
+            string tgdistance = "?";
+
+            if (TGMTAts.panel_[109] == 1)
+            {
+                tgspeed = Convert.ToString(TGMTAts.panel_[17]) + "km/h";
+                tgdistance = Convert.ToString(TGMTAts.panel_[108]) + "m";
+            }
+
+            //时间
+            hHMI2.Graphics.DrawString(hh + ":" + mm + ":" + ss, hmi2Font, new SolidBrush(Color.FromArgb(199, 199, 198)), 123, 20, stringC);
+            //车号
+            hHMI2.Graphics.DrawString("T" + trainnumberStr, hmi2Font, new SolidBrush(Color.FromArgb(199, 199, 198)), 123, 58, stringC);
+            //模式
+            hHMI2.Graphics.DrawString(trainmode, hmi2Font, new SolidBrush(Color.FromArgb(199, 199, 198)), 123, 96, stringC);
+
+            //下一站
+            hHMI2.Graphics.DrawString(stationNameStr, hmi2Font, new SolidBrush(Color.FromArgb(199, 199, 198)), 319, 20, stringC);
+            //终点站
+            hHMI2.Graphics.DrawString(destStationNameStr, hmi2Font, new SolidBrush(Color.FromArgb(199, 199, 198)), 319, 58, stringC);
+            //预选模式
+            hHMI2.Graphics.DrawString(trainselmode, hmi2Font, new SolidBrush(Color.FromArgb(199, 199, 198)), 319, 96, stringC);
+
+            //手柄级位
+            hHMI2.Graphics.DrawString(trainDirection + " " + handlePos, hmi2Font, new SolidBrush(Color.FromArgb(199, 199, 198)), 532, 20, stringC);
+            //牵引电流
+            hHMI2.Graphics.DrawString(ampereF + "A", hmi2Font, new SolidBrush(Color.FromArgb(199, 199, 198)), 532, 58, stringC);
+            //下一限速
+            hHMI2.Graphics.DrawString(tgspeed, hmi2Font, new SolidBrush(Color.FromArgb(199, 199, 198)), 532, 96, stringC);
+
+            //网压
+            hHMI2.Graphics.DrawString(Convert.ToString(TGMTPainter.voltage) + "V", hmi2Font, new SolidBrush(Color.FromArgb(199, 199, 198)), 713, 20, stringC);
+            //速度
+            hHMI2.Graphics.DrawString(Convert.ToString(speedF) + "km/h", hmi2Font, new SolidBrush(Color.FromArgb(199, 199, 198)), 713, 58, stringC);
+            //距离
+            hHMI2.Graphics.DrawString(tgdistance, hmi2Font, new SolidBrush(Color.FromArgb(199, 199, 198)), 713, 96, stringC);
+
+
+            int cabinitposX = 192;
+            int cabinitposY = 175;
+
+            hHMI2.Graphics.DrawString(trainnumberStr + "01", hmi2Font, new SolidBrush(Color.FromArgb(199, 199, 198)), cabinitposX + (0 * 87), cabinitposY, stringC);
+            hHMI2.Graphics.DrawString(trainnumberStr + "02", hmi2Font, new SolidBrush(Color.FromArgb(199, 199, 198)), cabinitposX + (1 * 87), cabinitposY, stringC);
+            hHMI2.Graphics.DrawString(trainnumberStr + "03", hmi2Font, new SolidBrush(Color.FromArgb(199, 199, 198)), cabinitposX + (2 * 87), cabinitposY, stringC);
+            hHMI2.Graphics.DrawString(trainnumberStr + "04", hmi2Font, new SolidBrush(Color.FromArgb(199, 199, 198)), cabinitposX + (3 * 87), cabinitposY, stringC);
+            hHMI2.Graphics.DrawString(trainnumberStr + "05", hmi2Font, new SolidBrush(Color.FromArgb(199, 199, 198)), cabinitposX + (4 * 87), cabinitposY, stringC);
+            hHMI2.Graphics.DrawString(trainnumberStr + "06", hmi2Font, new SolidBrush(Color.FromArgb(199, 199, 198)), cabinitposX + (5 * 87), cabinitposY, stringC);
+
+
+
+
+            return hHMI2;
+        }
         static int[] pow10 = new int[] { 1, 10, 100, 1000, 10000, 100000 };
 
         static int D(int src, int digit) {
@@ -403,8 +691,9 @@ namespace TGMTAts.OBCU {
         static Bitmap hmi, ackcmd, atoctrl, dormode, dorrel, drvmode, emergency, fault, departure, menu,
             selmode, sigmode, special, stopsig, num0, numn0, colon, hmitdt, life, distance, msg, rmpanel;
         static Bitmap tdtbackoff, tdtbackred, tdtbackgreen;
+        static Bitmap hmi2, dooropenleft, dooropenright, trainkey, traindir1, traindir2;
         static Image tdtdigitsred, tdtdigitsgreen;
         //static Bitmap tdtdigitsred, tdtdigitsgreen;
-        static System.Drawing.Font drawFont, timeFont, distanceFont;
+        static System.Drawing.Font drawFont, timeFont, distanceFont, hmi2Font;
     }
 }

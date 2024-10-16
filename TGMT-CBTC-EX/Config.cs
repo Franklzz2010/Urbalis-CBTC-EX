@@ -47,6 +47,8 @@ namespace TGMTAts.OBCU {
         public static string TDTImageSuffix = "zbx1425_tgmt_tdt.png";
         public static string SignalImageSuffix = "zbx1425_tgmt_signal.png";
 
+        public static string HMI2ImageSuffix = "zbx1425_tgmt_hmi2.png";
+
         private static void Cfg(this Dictionary<string, string> configDict, string key, ref double param) {
             if (configDict.ContainsKey(key)) {
                 var value = configDict[key].ToLowerInvariant();
@@ -137,6 +139,7 @@ namespace TGMTAts.OBCU {
             dict.Cfg("hmiimagesuffix", ref HMIImageSuffix);
             dict.Cfg("tdtimagesuffix", ref TDTImageSuffix);
             dict.Cfg("signalimagesuffix", ref SignalImageSuffix);
+            dict.Cfg("hmi2imagesuffix", ref HMI2ImageSuffix);
 
             var accelText = "0:3.3";
             dict.Cfg("acceleration", ref accelText);
