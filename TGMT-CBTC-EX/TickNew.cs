@@ -78,9 +78,9 @@ namespace TGMTAts.OBCU {
                 string hourS = Convert.ToString(hour).PadLeft(2, '0');
                 string minuteS = Convert.ToString(minute).PadLeft(2, '0');
 
-                msgTime1 = hourS + ":" + minuteS;
-                msgTime2 = hourS + ":" + minuteS;
-                msgTime3 = hourS + ":" + minuteS;
+                msg1.MsgTime = hourS + ":" + minuteS;
+                msg2.MsgTime = hourS + ":" + minuteS;
+                msg3.MsgTime = hourS + ":" + minuteS;
 
                 TGMTAts.initTimeMode = false;
             }
@@ -416,15 +416,20 @@ namespace TGMTAts.OBCU {
                     }
                     
                 }
-               
 
-                // 显示紧急制动、目标距离0、速度0
-                panel_[10] = 2;
-                panel_[29] = 2;
-                panel_[11] = 0;
-                panel_[19] = 0;
-                panel_[17] = 0;
-                bCommand = Math.Max(bCommand, handles.Brake.EmergencyBrakeNotch);
+
+               
+                if (state.Speed != 0)
+                {
+                    // 显示紧急制动、目标距离0、速度0
+                    panel_[10] = 2;
+                    panel_[29] = 2;
+                    panel_[11] = 0;
+                    panel_[19] = 0;
+                    panel_[17] = 0;
+                    bCommand = Math.Max(bCommand, handles.Brake.EmergencyBrakeNotch);
+                }
+
             }
 
             // 防溜、车门零速保护
@@ -630,8 +635,31 @@ namespace TGMTAts.OBCU {
             if (hHMITex.HasEnoughTimePassed(10)) {
                 hHMITex.Update(TGMTPainter.PaintHMI(state));
                 hTDTTex.Update(TGMTPainter.PaintTDT(state));
+                hHMI2Tex.Update(TGMTPainter.PaintHMI2(state, handles));
             }
 
+            if (TGMTPainter.counter == 0)
+            {
+                if (handles.Brake.Notch > 0 && handles.Brake.Notch <= 7 && state.Speed >= 5)
+                {
+                    var rd = new Random();
+                    int i = rd.Next(400);
+                    TGMTPainter.voltage = 1500 + i;
+                }
+                else if (handles.Power.Notch > 0)
+                {
+                    var rd = new Random();
+                    int i = rd.Next(400);
+                    TGMTPainter.voltage = 1100 + i;
+                }
+                else
+                {
+                    var rd = new Random();
+                    int i = rd.Next(400);
+                    TGMTPainter.voltage = 1300 + i;
+                }
+
+            }
 
             return tickResult;
         }
@@ -693,8 +721,15 @@ namespace TGMTAts.OBCU {
             }
         }
 
-        public static void updateMsg(int msgnumber)
+        public void updateMsg(int msgnumber)
         {
+            /*
+            msg3.MsgTime= msg2.MsgTime;
+            msg2.MsgTime = msg1.MsgTime;
+
+            msg3.MsgID = msg2.MsgID;
+            msg2.MsgID = msg1.MsgID;
+            */
 
             msgTime3 = msgTime2;
             msgContext3 = msgContext2;
@@ -710,6 +745,11 @@ namespace TGMTAts.OBCU {
 
             msgTime1 = hourS + ":" + minuteS;
             msgContext1 = msgnumber;
+
+            /*
+            msg1.MsgTime = hourS + ":" + minuteS;
+            msg1.MsgID = msgnumber;
+            */
 
 
         }

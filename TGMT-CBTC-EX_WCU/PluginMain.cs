@@ -40,7 +40,7 @@ namespace TGMTAts.WCU {
 
         private void OnScenarioCreated(ScenarioCreatedEventArgs e) {
             if (!e.Scenario.Trains.ContainsKey(Config.PretrainName)) {
-                throw new BveFileLoadException(string.Format("キーが {0} の他列車が見つかりませんでした。", Config.PretrainName), "TGMT-CBTC-EX_WCU");
+                throw new BveFileLoadException(string.Format("找不到具有{0}密钥的其他列车。", Config.PretrainName), "TGMT-CBTC-EX_WCU");
             }
 
             Train = e.Scenario.Trains[Config.PretrainName];
