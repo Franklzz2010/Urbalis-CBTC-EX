@@ -78,9 +78,15 @@ namespace TGMTAts.OBCU {
                 string hourS = Convert.ToString(hour).PadLeft(2, '0');
                 string minuteS = Convert.ToString(minute).PadLeft(2, '0');
 
+                msgTime1 = hourS + ":" + minuteS;
+                msgTime2 = hourS + ":" + minuteS;
+                msgTime3 = hourS + ":" + minuteS;
+
+                /*
                 msg1.MsgTime = hourS + ":" + minuteS;
                 msg2.MsgTime = hourS + ":" + minuteS;
                 msg3.MsgTime = hourS + ":" + minuteS;
+                */
 
                 TGMTAts.initTimeMode = false;
             }
@@ -107,6 +113,24 @@ namespace TGMTAts.OBCU {
             trackLimit.Update(location);
             StationManager.Update(state, doorOpen);
 
+            //释放速度抑制计算
+
+            //未进站
+            if (TGMTAts.movementEndpoint.Location > StationManager.NextStation.StopPosition
+                && !StationManager.Arrived && state.Location < StationManager.NextStation.StopPosition + Config.StationEndDistance)
+            {
+                releaseSpeedInop = true;
+            }
+            else if (StationManager.Arrived && doorOpen) //停站开门中
+            {
+                releaseSpeedInop = true;
+            }
+            else
+            {
+                releaseSpeedInop = false;
+            }
+
+
             CalculatedLimit maximumCurve = null, targetCurve = null, recommendCurve = null;
             switch (signalMode) {
                 case 0:
@@ -128,7 +152,8 @@ namespace TGMTAts.OBCU {
                     // 释放速度
                     if (movementEndpoint.Location - location < Config.ReleaseSpeedDistance
                         && movementEndpoint.Location > location
-                        && state.Speed < Config.ReleaseSpeed && !releaseSpeed) {
+                        && state.Speed < Config.ReleaseSpeed && !releaseSpeed
+                        && !releaseSpeedInop) {
                         atsSound1.Play();
                         ackMessage = 2;
                     }
