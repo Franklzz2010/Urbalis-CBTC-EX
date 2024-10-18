@@ -117,7 +117,8 @@ namespace TGMTAts.OBCU {
 
             //未进站
             if (TGMTAts.movementEndpoint.Location > StationManager.NextStation.StopPosition
-                && !StationManager.Arrived && state.Location < StationManager.NextStation.StopPosition + Config.StationEndDistance)
+                && !StationManager.Arrived && state.Location < StationManager.NextStation.StopPosition + Config.StationEndDistance
+                && !StationManager.NextStation.Pass)
             {
                 releaseSpeedInop = true;
             }
