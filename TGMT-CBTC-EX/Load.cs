@@ -52,6 +52,8 @@ namespace TGMTAts.OBCU {
         public static bool releaseSpeed = false;
         public static int ackMessage = 0;
 
+        public static bool releaseSpeedInop = false;
+
         public static int TrainNumber = 0;
         public static int DestinationNumber = 0;
 

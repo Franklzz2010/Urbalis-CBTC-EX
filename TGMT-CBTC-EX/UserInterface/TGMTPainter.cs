@@ -154,30 +154,6 @@ namespace TGMTAts.OBCU {
             hHMI.DrawImage(numn0, 275, 212, D((int)Math.Abs(Math.Ceiling(state.Speed)), 1) * 18, 18);
 
 
-
-            var second = Convert.ToInt32(state.Time.TotalMilliseconds) / 1000 % 60;
-            var minute = Convert.ToInt32(state.Time.TotalMilliseconds) / 1000 / 60 % 60;
-            var hour = Convert.ToInt32(state.Time.TotalMilliseconds) / 1000 / 3600 % 60;
-
-            var hh = Convert.ToString(hour);
-            var mm = Convert.ToString(minute);
-            var ss = Convert.ToString(second);
-            hh = hh.PadLeft(2, '0');
-            mm = mm.PadLeft(2, '0');
-            ss = ss.PadLeft(2, '0');
-
-            
-
-            /*hHMI.DrawImage(num0, 60, 582, D(hrs, 1) * 18, 18);
-            hHMI.DrawImage(num0, 74, 582, D(hrs, 0) * 18, 18);
-            hHMI.DrawImage(num0, 102, 582, D(min, 1) * 18, 18);
-            hHMI.DrawImage(num0, 116, 582, D(min, 0) * 18, 18);
-            hHMI.DrawImage(num0, 144, 582, D(sec, 1) * 18, 18);
-            hHMI.DrawImage(num0, 158, 582, D(sec, 0) * 18, 18);
-            if (sec % 2 == 0) {
-                hHMI.DrawImage(colon, 88, 582);
-                hHMI.DrawImage(colon, 130, 582);
-            }*/
             hHMI.EndGDI();
 
             var stringC = new StringFormat();
@@ -292,7 +268,7 @@ namespace TGMTAts.OBCU {
                 }
             }
 
-            hHMI.Graphics.DrawString(hh + ":" + mm + ":" + ss, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 225, 568);
+            hHMI.Graphics.DrawString(TimeFormatter.MiliSecondToString(state.Time.TotalMilliseconds), timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 225, 568);
 
             hHMI.Graphics.DrawString(System.DateTime.Now.ToShortDateString(), timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 100, 568);
 
@@ -304,16 +280,7 @@ namespace TGMTAts.OBCU {
                 hHMI.Graphics.DrawString(Convert.ToString(TGMTAts.panel_[108]) + "m", distanceFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 128, 333, stringC);
             }
 
-            var depSecond = StationManager.NextStation.DepartureTime / 1000 % 60;
-            var depMinute = StationManager.NextStation.DepartureTime / 1000 / 60 % 60;
-            var depHour = StationManager.NextStation.DepartureTime / 1000 / 3600 % 60;
 
-            string dh = Convert.ToString(depHour);
-            string dm = Convert.ToString(depMinute);
-            string ds = Convert.ToString(depSecond);
-            dh = dh.PadLeft(2, '0');
-            dm = dm.PadLeft(2, '0');
-            ds = ds.PadLeft(2, '0');
 
 
             int depTimeDisplayX = 450;
@@ -333,7 +300,7 @@ namespace TGMTAts.OBCU {
             if (TGMTAts.panel_[105] == 1)
             {
                 hHMI.Graphics.DrawString("发车时间", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), depTimeDisplayX, 20, stringC);
-                hHMI.Graphics.DrawString(dh + ":" + dm + ":" + ds, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), depTimeDisplayX, depTimeDisplayY, stringC);
+                hHMI.Graphics.DrawString(TimeFormatter.MiliSecondToString(StationManager.NextStation.DepartureTime), timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), depTimeDisplayX, depTimeDisplayY, stringC);
             }
 
             hHMI.Graphics.DrawString("T" + TGMTAts.TrainNumber, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 600, 20, stringC);
@@ -578,16 +545,6 @@ namespace TGMTAts.OBCU {
 
             hHMI2.EndGDI();
 
-            var second = Convert.ToInt32(state.Time.TotalMilliseconds) / 1000 % 60;
-            var minute = Convert.ToInt32(state.Time.TotalMilliseconds) / 1000 / 60 % 60;
-            var hour = Convert.ToInt32(state.Time.TotalMilliseconds) / 1000 / 3600 % 60;
-
-            var hh = Convert.ToString(hour);
-            var mm = Convert.ToString(minute);
-            var ss = Convert.ToString(second);
-            hh = hh.PadLeft(2, '0');
-            mm = mm.PadLeft(2, '0');
-            ss = ss.PadLeft(2, '0');
 
             FilesINI ConfigINI = new FilesINI();
             string stationNameStr = ConfigINI.INIRead("station", Convert.ToString(TGMTAts.nextStationNumber), INIPath);
@@ -613,7 +570,7 @@ namespace TGMTAts.OBCU {
             }
 
             //时间
-            hHMI2.Graphics.DrawString(hh + ":" + mm + ":" + ss, hmi2Font, new SolidBrush(Color.FromArgb(199, 199, 198)), 123, 20, stringC);
+            hHMI2.Graphics.DrawString(TimeFormatter.MiliSecondToString(state.Time.TotalMilliseconds), hmi2Font, new SolidBrush(Color.FromArgb(199, 199, 198)), 123, 20, stringC);
             //车号
             hHMI2.Graphics.DrawString("T" + trainnumberStr, hmi2Font, new SolidBrush(Color.FromArgb(199, 199, 198)), 123, 58, stringC);
             //模式

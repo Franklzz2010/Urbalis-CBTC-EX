@@ -54,7 +54,7 @@ namespace TGMTAts.OBCU {
                 if (!Stopped) TGMTAts.Log("已在站内停稳");
                 if (Stopped == false)
                 {
-                    TGMTAts.panel_[202] = Convert.ToInt32((state.Time.TotalMilliseconds / 1000));
+                    TGMTAts.panel_[202] = TimeFormatter.MiliSecondToInt(state.Time.TotalMilliseconds);
                 }
                 Stopped = true;
             }
