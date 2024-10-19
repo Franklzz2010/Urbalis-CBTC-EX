@@ -222,6 +222,10 @@ namespace TGMTAts.OBCU {
                     TGMTAts.panel_[109] = 1;
                     atsSound1.Play();
                 }
+                else
+                {
+                    TGMTAts.panel_[109] = 0;
+                }
             }
             else
             {
