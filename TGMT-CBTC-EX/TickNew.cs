@@ -64,23 +64,16 @@ namespace TGMTAts.OBCU {
         private void OnAllPluginsLoaded(object sender, EventArgs e) {
             mapPlugin = Plugins[PluginType.MapPlugin]["TGMT_WCU_Plugin"] as MapPlugin;
         }
-        public static int currenttime;
 
         public override TickResult Tick(TimeSpan elapsed) {
             var state = Native.VehicleState;
-            currenttime = Convert.ToInt32(state.Time.TotalMilliseconds);
 
             if (TGMTAts.initTimeMode == true)
             {
-                int hour = currenttime / 1000 / 3600 % 60;
-                int minute = currenttime / 1000 / 60 % 60;
 
-                string hourS = Convert.ToString(hour).PadLeft(2, '0');
-                string minuteS = Convert.ToString(minute).PadLeft(2, '0');
-
-                msgTime1 = hourS + ":" + minuteS;
-                msgTime2 = hourS + ":" + minuteS;
-                msgTime3 = hourS + ":" + minuteS;
+                msgTime1 = TimeFormatter.MiliSecondToShortString(state.Time.TotalMilliseconds);
+                msgTime2 = TimeFormatter.MiliSecondToShortString(state.Time.TotalMilliseconds);
+                msgTime3 = TimeFormatter.MiliSecondToShortString(state.Time.TotalMilliseconds);
 
                 /*
                 msg1.MsgTime = hourS + ":" + minuteS;
@@ -396,7 +389,7 @@ namespace TGMTAts.OBCU {
                     // 超出制动干预速度
                     if (ebState == 0)
                     {
-                        updateMsg(5);
+                        updateMsg(5, state);
                         atsSound0.Play();
                     }
                     ebState = 1;
@@ -425,7 +418,7 @@ namespace TGMTAts.OBCU {
                 {
                     if (ebState == 0)
                     {
-                        updateMsg(9);
+                        updateMsg(9, state);
                         atsSound2.Stop();
                         atsSound2.Play();
                         ebState = 1;
@@ -495,14 +488,14 @@ namespace TGMTAts.OBCU {
             if (releaseSpeed) panel_[31] = 3;
             if (ackMessage > 0) {
                 panel_[35] = ackMessage;
-                panel_[36] = atsPanel36.Value = ((state.Time.TotalMilliseconds / 1000) % 0.5 < 0.25) ? 1 : 0;
+                panel_[36] = atsPanel36.Value = (TimeFormatter.MiliSecondToInt(state.Time.TotalMilliseconds)% 0.5 < 0.25) ? 1 : 0;
             } else {
                 panel_[35] = panel_[36] = atsPanel36.Value = 0;
             }
 
             // 显示TDT、车门使能，车门零速保护
             if (StationManager.NextStation != null) {
-                int depTime = Convert.ToInt32((state.Time.TotalMilliseconds / 1000) - (StationManager.NextStation.DepartureTime / 1000));
+                int depTime = Convert.ToInt32(TimeFormatter.MiliSecondToInt(state.Time.TotalMilliseconds) - TimeFormatter.MiliSecondToInt(StationManager.NextStation.DepartureTime));
                 //int stopTime = Convert.ToInt32((state.Time.TotalMilliseconds / 1000) - (TGMTAts.panel_[201] + TGMTAts.panel_[202]));
                 //int timeToDep = Math.Min(depTime, stopTime);
                 if (depTime <= 0) {
@@ -747,7 +740,7 @@ namespace TGMTAts.OBCU {
             }
         }
 
-        public void updateMsg(int msgnumber)
+        public void updateMsg(int msgnumber, AtsEx.PluginHost.Native.VehicleState state)
         {
             /*
             msg3.MsgTime= msg2.MsgTime;
@@ -763,13 +756,9 @@ namespace TGMTAts.OBCU {
             msgTime2 = msgTime1;
             msgContext2 = msgContext1;
 
-            int hour = currenttime / 1000 / 3600 % 60;
-            int minute = currenttime / 1000 / 60 % 60;
 
-            string hourS = Convert.ToString(hour).PadLeft(2, '0');
-            string minuteS = Convert.ToString(minute).PadLeft(2, '0');
 
-            msgTime1 = hourS + ":" + minuteS;
+            msgTime1 = TimeFormatter.MiliSecondToShortString(state.Time.TotalMilliseconds);
             msgContext1 = msgnumber;
 
             /*
