@@ -117,7 +117,7 @@ namespace TGMTAts.OBCU{
                 case 96802:
                     // TGMT 主
                     // TGMT 填充
-                    signalMode = 2;
+                    signalMode = 1;
                     FixIncompatibleModes();
                     if (signalMode == 1) {
                         if (e.SignalIndex > 0) {
