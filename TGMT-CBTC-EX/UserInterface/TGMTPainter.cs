@@ -329,8 +329,8 @@ namespace TGMTAts.OBCU {
 
             if (nextStationDistance < 1000 && nextStationDistance >= -5 && !StationManager.NextStation.Pass && !arrived)
             {
-                hHMI.Graphics.DrawString("╬Юобу╬", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 430, 308, stringC);
-                hHMI.Graphics.DrawString(disF + "m", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 430, 333, stringC);
+                hHMI.Graphics.DrawString("╬Юобу╬", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 393, 391, stringC);
+                hHMI.Graphics.DrawString(disF + "m", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 393, 416, stringC);
             }
 
 
