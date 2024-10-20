@@ -565,25 +565,47 @@ namespace TGMTAts.OBCU {
             listY_[7] = 521;
             listY_[8] = 546;
 
+
+
             //×´Ì¬²¿·Ö
-            if (state.BcPressure > 0)
+
+            if (state.BcPressure > 70)
             {
-                hHMI2.DrawImage(hmi2Red, cabX_[1], listY_[1]);
-                hHMI2.DrawImage(hmi2Red, cabX_[2], listY_[1]);
-                hHMI2.DrawImage(hmi2Red, cabX_[3], listY_[1]);
-                hHMI2.DrawImage(hmi2Red, cabX_[4], listY_[1]);
-                hHMI2.DrawImage(hmi2Red, cabX_[5], listY_[1]);
-                hHMI2.DrawImage(hmi2Red, cabX_[6], listY_[1]);
+                hHMI2.DrawImage(hmi2Yellow, cabX_[1], listY_[1]);
+                hHMI2.DrawImage(hmi2Yellow, cabX_[2], listY_[1]);
+                hHMI2.DrawImage(hmi2Yellow, cabX_[3], listY_[1]);
+                hHMI2.DrawImage(hmi2Yellow, cabX_[4], listY_[1]);
+                hHMI2.DrawImage(hmi2Yellow, cabX_[5], listY_[1]);
+                hHMI2.DrawImage(hmi2Yellow, cabX_[6], listY_[1]);
+            }
+            else if (state.BcPressure > 0)
+            {
+                hHMI2.DrawImage(hmi2Green, cabX_[1], listY_[1]);
+                hHMI2.DrawImage(hmi2Green, cabX_[2], listY_[1]);
+                hHMI2.DrawImage(hmi2Green, cabX_[3], listY_[1]);
+                hHMI2.DrawImage(hmi2Green, cabX_[4], listY_[1]);
+                hHMI2.DrawImage(hmi2Green, cabX_[5], listY_[1]);
+                hHMI2.DrawImage(hmi2Green, cabX_[6], listY_[1]);
             }
 
-            if (state.Current < 0)
+
+
+            if (state.Current < -50)
             {
                 hHMI2.DrawImage(hmi2Yellow, cabX_[1], listY_[2]);
                 hHMI2.DrawImage(hmi2Yellow, cabX_[3], listY_[2]);
                 hHMI2.DrawImage(hmi2Yellow, cabX_[4], listY_[2]);
                 hHMI2.DrawImage(hmi2Yellow, cabX_[6], listY_[2]);
-
             }
+            else if (state.Current < 0)
+            {
+                hHMI2.DrawImage(hmi2Green, cabX_[1], listY_[2]);
+                hHMI2.DrawImage(hmi2Green, cabX_[3], listY_[2]);
+                hHMI2.DrawImage(hmi2Green, cabX_[4], listY_[2]);
+                hHMI2.DrawImage(hmi2Green, cabX_[6], listY_[2]);
+            }
+
+
 
             if (dirpos != 0)
             {
@@ -595,6 +617,8 @@ namespace TGMTAts.OBCU {
                 hHMI2.DrawImage(hmi2Green, cabX_[5], listY_[5]);
 
             }
+
+
 
             if (state.Current > 0)
             {
@@ -613,6 +637,8 @@ namespace TGMTAts.OBCU {
                     hHMI2.DrawImage(hmi2Green, cabX_[5], listY_[4]);
                 }
             }
+
+
 
             if (TGMTAts.doorOpen)
             {
@@ -633,6 +659,7 @@ namespace TGMTAts.OBCU {
                 hHMI2.DrawImage(hmi2Green, cabX_[5], listY_[7]);
                 hHMI2.DrawImage(hmi2Green, cabX_[6], listY_[7]);
             }
+
 
 
             hHMI2.EndGDI();
