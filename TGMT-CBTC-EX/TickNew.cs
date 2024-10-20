@@ -196,10 +196,36 @@ namespace TGMTAts.OBCU {
                 }
             }
 
-            if (targetSpeed < ebSpeed && targetDistance < 500 && TGMTAts.panel_[18] == 0 && TGMTAts.driveMode == 1 )
+            if (targetSpeed < ebSpeed && TGMTAts.panel_[18] == 0 && TGMTAts.driveMode == 1)
             {
-                TGMTAts.panel_[109] = 1;
-                atsSound1.Play();
+                if (ebSpeed - targetSpeed > 60 && targetDistance < 1000)
+                {
+                    TGMTAts.panel_[109] = 1;
+                    atsSound1.Play();
+                }
+                else if(ebSpeed - targetSpeed > 40 && targetDistance < 750)
+                {
+                    TGMTAts.panel_[109] = 1;
+                    atsSound1.Play();
+                }
+                else if (ebSpeed - targetSpeed > 20 && targetDistance < 500)
+                {
+                    TGMTAts.panel_[109] = 1;
+                    atsSound1.Play();
+                }
+                else if (ebSpeed - targetSpeed > 10 && targetDistance < 250)
+                {
+                    TGMTAts.panel_[109] = 1;
+                    atsSound1.Play();
+                }else if (targetDistance < 100)
+                {
+                    TGMTAts.panel_[109] = 1;
+                    atsSound1.Play();
+                }
+                else
+                {
+                    TGMTAts.panel_[109] = 0;
+                }
             }
             else
             {

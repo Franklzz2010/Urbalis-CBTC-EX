@@ -78,6 +78,9 @@ namespace TGMTAts.OBCU {
             trainkey = new Bitmap(Path.Combine(imgDir, "key.png"));
             traindir1 = new Bitmap(Path.Combine(imgDir, "dir1.png"));
             traindir2 = new Bitmap(Path.Combine(imgDir, "dir2.png"));
+            hmi2Green = new Bitmap(Path.Combine(imgDir, "hmi2Green.png"));
+            hmi2Yellow = new Bitmap(Path.Combine(imgDir, "hmi2Yellow.png"));
+            hmi2Red = new Bitmap(Path.Combine(imgDir, "hmi2Red.png"));
 
 
         }
@@ -327,10 +330,10 @@ namespace TGMTAts.OBCU {
                 arrived = true;
             }
 
-            if (nextStationDistance <= 400 && nextStationDistance >= -5 && !StationManager.NextStation.Pass && !arrived)
+            if (nextStationDistance < 1000 && nextStationDistance >= -5 && !StationManager.NextStation.Pass && !arrived)
             {
-                hHMI.Graphics.DrawString("距下站", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 430, 308, stringC);
-                hHMI.Graphics.DrawString(disF + "m", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 430, 333, stringC);
+                hHMI.Graphics.DrawString("距下站", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 393, 391, stringC);
+                hHMI.Graphics.DrawString(disF + "m", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 393, 416, stringC);
             }
 
 
@@ -543,9 +546,125 @@ namespace TGMTAts.OBCU {
                     break;
             }
 
+            int[] cabX_ = new int[8];
+            int[] listY_ = new int[16];
+
+            cabX_[1] = 149;
+            cabX_[2] = 236;
+            cabX_[3] = 323;
+            cabX_[4] = 410;
+            cabX_[5] = 497;
+            cabX_[6] = 584;
+
+            listY_[1] = 371;
+            listY_[2] = 396;
+            listY_[3] = 421;
+            listY_[4] = 446;
+            listY_[5] = 471;
+            listY_[6] = 496;
+            listY_[7] = 521;
+            listY_[8] = 546;
+
+
+
+            //状态部分
+
+            if (state.BcPressure > 70)
+            {
+                hHMI2.DrawImage(hmi2Yellow, cabX_[1], listY_[1]);
+                hHMI2.DrawImage(hmi2Yellow, cabX_[2], listY_[1]);
+                hHMI2.DrawImage(hmi2Yellow, cabX_[3], listY_[1]);
+                hHMI2.DrawImage(hmi2Yellow, cabX_[4], listY_[1]);
+                hHMI2.DrawImage(hmi2Yellow, cabX_[5], listY_[1]);
+                hHMI2.DrawImage(hmi2Yellow, cabX_[6], listY_[1]);
+            }
+            else if (state.BcPressure > 0)
+            {
+                hHMI2.DrawImage(hmi2Green, cabX_[1], listY_[1]);
+                hHMI2.DrawImage(hmi2Green, cabX_[2], listY_[1]);
+                hHMI2.DrawImage(hmi2Green, cabX_[3], listY_[1]);
+                hHMI2.DrawImage(hmi2Green, cabX_[4], listY_[1]);
+                hHMI2.DrawImage(hmi2Green, cabX_[5], listY_[1]);
+                hHMI2.DrawImage(hmi2Green, cabX_[6], listY_[1]);
+            }
+
+
+
+            if (state.Current < -50)
+            {
+                hHMI2.DrawImage(hmi2Yellow, cabX_[1], listY_[2]);
+                hHMI2.DrawImage(hmi2Yellow, cabX_[3], listY_[2]);
+                hHMI2.DrawImage(hmi2Yellow, cabX_[4], listY_[2]);
+                hHMI2.DrawImage(hmi2Yellow, cabX_[6], listY_[2]);
+            }
+            else if (state.Current < 0)
+            {
+                hHMI2.DrawImage(hmi2Green, cabX_[1], listY_[2]);
+                hHMI2.DrawImage(hmi2Green, cabX_[3], listY_[2]);
+                hHMI2.DrawImage(hmi2Green, cabX_[4], listY_[2]);
+                hHMI2.DrawImage(hmi2Green, cabX_[6], listY_[2]);
+            }
+
+
+
+            if (dirpos != 0)
+            {
+
+                hHMI2.DrawImage(hmi2Green, cabX_[1], listY_[3]);
+                hHMI2.DrawImage(hmi2Green, cabX_[6], listY_[3]);
+
+                hHMI2.DrawImage(hmi2Green, cabX_[2], listY_[5]);
+                hHMI2.DrawImage(hmi2Green, cabX_[5], listY_[5]);
+
+            }
+
+
+
+            if (state.Current > 0)
+            {
+                hHMI2.DrawImage(hmi2Green, cabX_[1], listY_[4]);
+                hHMI2.DrawImage(hmi2Green, cabX_[3], listY_[4]);
+                if (state.Speed > 1) 
+                {
+                    hHMI2.DrawImage(hmi2Green, cabX_[4], listY_[4]);
+                    hHMI2.DrawImage(hmi2Green, cabX_[6], listY_[4]);
+
+                }
+
+                if (state.Speed > 5)
+                {
+                    hHMI2.DrawImage(hmi2Green, cabX_[2], listY_[4]);
+                    hHMI2.DrawImage(hmi2Green, cabX_[5], listY_[4]);
+                }
+            }
+
+
+
+            if (TGMTAts.doorOpen)
+            {
+                hHMI2.DrawImage(hmi2Red, cabX_[1], listY_[7]);
+                hHMI2.DrawImage(hmi2Red, cabX_[2], listY_[7]);
+                hHMI2.DrawImage(hmi2Red, cabX_[3], listY_[7]);
+                hHMI2.DrawImage(hmi2Red, cabX_[4], listY_[7]);
+                hHMI2.DrawImage(hmi2Red, cabX_[5], listY_[7]);
+                hHMI2.DrawImage(hmi2Red, cabX_[6], listY_[7]);
+
+            }
+            else if (state.Speed == 0)
+            {
+                hHMI2.DrawImage(hmi2Green, cabX_[1], listY_[7]);
+                hHMI2.DrawImage(hmi2Green, cabX_[2], listY_[7]);
+                hHMI2.DrawImage(hmi2Green, cabX_[3], listY_[7]);
+                hHMI2.DrawImage(hmi2Green, cabX_[4], listY_[7]);
+                hHMI2.DrawImage(hmi2Green, cabX_[5], listY_[7]);
+                hHMI2.DrawImage(hmi2Green, cabX_[6], listY_[7]);
+            }
+
+
+
             hHMI2.EndGDI();
 
-
+            
             FilesINI ConfigINI = new FilesINI();
             string stationNameStr = ConfigINI.INIRead("station", Convert.ToString(TGMTAts.nextStationNumber), INIPath);
             string destStationNameStr = ConfigINI.INIRead("station", Convert.ToString(TGMTAts.DestinationNumber), INIPath);
@@ -648,7 +767,7 @@ namespace TGMTAts.OBCU {
         static Bitmap hmi, ackcmd, atoctrl, dormode, dorrel, drvmode, emergency, fault, departure, menu,
             selmode, sigmode, special, stopsig, num0, numn0, colon, hmitdt, life, distance, msg, rmpanel;
         static Bitmap tdtbackoff, tdtbackred, tdtbackgreen;
-        static Bitmap hmi2, dooropenleft, dooropenright, trainkey, traindir1, traindir2;
+        static Bitmap hmi2, dooropenleft, dooropenright, trainkey, traindir1, traindir2, hmi2Green, hmi2Red, hmi2Yellow;
         static Image tdtdigitsred, tdtdigitsgreen;
         //static Bitmap tdtdigitsred, tdtdigitsgreen;
         static System.Drawing.Font drawFont, timeFont, distanceFont, hmi2Font;
