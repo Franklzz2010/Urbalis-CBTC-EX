@@ -120,9 +120,9 @@ namespace TGMTAts.OBCU {
 
             if (TGMTAts.selectingMode == -1 && TGMTAts.ackMessage == 0)
             {
-                hHMI.DrawImage(msg, 115, 480, TGMTAts.msgContext1 * 18, 18);
-                hHMI.DrawImage(msg, 115, 501, TGMTAts.msgContext2 * 18, 18);
-                hHMI.DrawImage(msg, 115, 522, TGMTAts.msgContext3 * 18, 18);
+                hHMI.DrawImage(msg, 115, 480, TGMTAts.msg1.MsgID * 18, 18);
+                hHMI.DrawImage(msg, 115, 501, TGMTAts.msg2.MsgID * 18, 18);
+                hHMI.DrawImage(msg, 115, 522, TGMTAts.msg3.MsgID * 18, 18);
             }
             
 
@@ -165,9 +165,9 @@ namespace TGMTAts.OBCU {
 
             if (TGMTAts.selectingMode == -1 && TGMTAts.ackMessage == 0)
             {
-                hHMI.Graphics.DrawString(TGMTAts.msgTime1, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 83, 479, stringC);
-                hHMI.Graphics.DrawString(TGMTAts.msgTime2, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 83, 499, stringC);
-                hHMI.Graphics.DrawString(TGMTAts.msgTime3, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 83, 519, stringC);
+                hHMI.Graphics.DrawString(TGMTAts.msg1.MsgTime, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 83, 479, stringC);
+                hHMI.Graphics.DrawString(TGMTAts.msg2.MsgTime, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 83, 499, stringC);
+                hHMI.Graphics.DrawString(TGMTAts.msg3.MsgTime, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 83, 519, stringC);
             }
 
             hHMI.Graphics.FillRectangle(overspeed[TGMTAts.panel_[10]], new Rectangle(20, 18, 80, 78));

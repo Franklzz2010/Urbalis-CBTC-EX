@@ -69,17 +69,12 @@ namespace TGMTAts.OBCU {
             var state = Native.VehicleState;
 
             if (TGMTAts.initTimeMode == true)
-            {
+            { 
+                msg1.MsgTime = msg2.MsgTime = msg3.MsgTime = TimeFormatter.MiliSecondToShortString(state.Time.TotalMilliseconds);
 
-                msgTime1 = TimeFormatter.MiliSecondToShortString(state.Time.TotalMilliseconds);
-                msgTime2 = TimeFormatter.MiliSecondToShortString(state.Time.TotalMilliseconds);
-                msgTime3 = TimeFormatter.MiliSecondToShortString(state.Time.TotalMilliseconds);
-
-                /*
-                msg1.MsgTime = hourS + ":" + minuteS;
-                msg2.MsgTime = hourS + ":" + minuteS;
-                msg3.MsgTime = hourS + ":" + minuteS;
-                */
+                msg1.MsgID = 1;
+                msg2.MsgID = 13;
+                msg3.MsgID = 12;
 
                 TGMTAts.initTimeMode = false;
             }
@@ -768,29 +763,16 @@ namespace TGMTAts.OBCU {
 
         public void updateMsg(int msgnumber, AtsEx.PluginHost.Native.VehicleState state)
         {
-            /*
+            
             msg3.MsgTime= msg2.MsgTime;
             msg2.MsgTime = msg1.MsgTime;
 
             msg3.MsgID = msg2.MsgID;
             msg2.MsgID = msg1.MsgID;
-            */
-
-            msgTime3 = msgTime2;
-            msgContext3 = msgContext2;
-
-            msgTime2 = msgTime1;
-            msgContext2 = msgContext1;
-
-
-
-            msgTime1 = TimeFormatter.MiliSecondToShortString(state.Time.TotalMilliseconds);
-            msgContext1 = msgnumber;
-
-            /*
-            msg1.MsgTime = hourS + ":" + minuteS;
+            
+            msg1.MsgTime = TimeFormatter.MiliSecondToShortString(state.Time.TotalMilliseconds);
             msg1.MsgID = msgnumber;
-            */
+            
 
 
         }

@@ -45,9 +45,6 @@ namespace TGMTAts.OBCU {
         //首次启动需将HMI上msg显示的时间校准
         public static bool initTimeMode = true;
 
-        public static string msgTime1, msgTime2, msgTime3;
-        public static int msgContext1 = 1, msgContext2 = 13, msgContext3 = 12;
-
         public static int ebState = 0;
         public static bool releaseSpeed = false;
         public static int ackMessage = 0;
@@ -73,9 +70,9 @@ namespace TGMTAts.OBCU {
         public static TextureHandle hHMITex;
         public static TextureHandle hHMI2Tex;
 
-        public Msg msg1 = new Msg();
-        public Msg msg2 = new Msg();
-        public Msg msg3 = new Msg();
+        public static Msg msg1 = new Msg();
+        public static Msg msg2 = new Msg();
+        public static Msg msg3 = new Msg();
 
         static TGMTAts() {
             Config.Load(Path.Combine(Config.PluginDir, "TGMTConfig.txt"));
