@@ -48,6 +48,10 @@ namespace TGMTAts.OBCU {
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.B2].Pressed += OnB2Pressed;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.C1].Pressed += OnC1Pressed;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.C2].Pressed += OnC2Pressed;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.I].Pressed += OnIPressed;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.J].Pressed += OnJPressed;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.K].Pressed += OnKPressed;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.L].Pressed += OnLPressed;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.A1].Released += OnA1Up;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.B1].Released += OnB1Up;
 
@@ -700,6 +704,8 @@ namespace TGMTAts.OBCU {
                 }
 
             }
+
+            if (panel_[50] == 1) atsSound1.Play();
 
             return tickResult;
         }

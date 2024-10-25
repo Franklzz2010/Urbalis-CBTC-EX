@@ -53,6 +53,7 @@ namespace TGMTAts.OBCU {
             distance = new Bitmap(Path.Combine(imgDir, "distance.png"));
             msg = new Bitmap(Path.Combine(imgDir, "msg_history.png"));
             rmpanel = new Bitmap(Path.Combine(imgDir, "rmpanel.png"));
+            bmconfirm = new Bitmap(Path.Combine(imgDir, "bmconfirm.png"));
 
             drawFont = new System.Drawing.Font("思源黑体 CN Bold", 30);
             timeFont = new System.Drawing.Font("思源黑体 CN Bold", 15);
@@ -156,6 +157,7 @@ namespace TGMTAts.OBCU {
             hHMI.DrawImage(num0, 289, 212, D((int)Math.Abs(Math.Ceiling(state.Speed)), 0) * 18, 18);
             hHMI.DrawImage(numn0, 275, 212, D((int)Math.Abs(Math.Ceiling(state.Speed)), 1) * 18, 18);
 
+            if (TGMTAts.panel_[50] == 1) hHMI.DrawImage(bmconfirm, 555, 400);
 
             hHMI.EndGDI();
 
@@ -765,7 +767,7 @@ namespace TGMTAts.OBCU {
         static Brush[] targetColor = new Brush[] { new SolidBrush(Color.Red), new SolidBrush(Color.Orange), new SolidBrush(Color.Green) };
         static Brush[] overspeed = new Brush[] { new SolidBrush(Color.Empty), new SolidBrush(Color.Orange), new SolidBrush(Color.Red) };
         static Bitmap hmi, ackcmd, atoctrl, dormode, dorrel, drvmode, emergency, fault, departure, menu,
-            selmode, sigmode, special, stopsig, num0, numn0, colon, hmitdt, life, distance, msg, rmpanel;
+            selmode, sigmode, special, stopsig, num0, numn0, colon, hmitdt, life, distance, msg, rmpanel, bmconfirm;
         static Bitmap tdtbackoff, tdtbackred, tdtbackgreen;
         static Bitmap hmi2, dooropenleft, dooropenright, trainkey, traindir1, traindir2, hmi2Green, hmi2Red, hmi2Yellow;
         static Image tdtdigitsred, tdtdigitsgreen;

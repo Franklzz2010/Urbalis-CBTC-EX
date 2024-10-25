@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using AtsEx.PluginHost.Plugins;
+using SlimDX.XInput;
 
 namespace TGMTAts.OBCU{
     public partial class TGMTAts : AssemblyPluginBase {
@@ -53,17 +54,38 @@ namespace TGMTAts.OBCU{
         }
         private void OnC1Pressed(object sender, EventArgs e) {
             // PageUp 模式升级
-            if (selectingMode == -1) selectingMode = selectedMode;
-            // TODO: XAM还没做
-            selectingMode = Math.Min(4, Math.Max(0, selectingMode + 1));
+            if(selectedMode == 3) selectingMode = 4;
+            else selectingMode = 3;
             selectModeStartTime = time;
         }
         private void OnC2Pressed(object sender, EventArgs e) {
             // PageDown 模式降级
-            if (selectingMode == -1) selectingMode = selectedMode;
-            // TODO: XAM还没做
-            selectingMode = Math.Min(4, Math.Max(0, selectingMode - 1));
+            if (selectedMode == 4) selectingMode = 3;
+            else selectingMode = 4;
             selectModeStartTime = time;
+        }
+
+        private void OnLPressed(object sender, EventArgs e) { 
+            signalMode = 0;
+            FixIncompatibleModes();
+        }
+
+        private void OnKPressed(object sender, EventArgs e)
+        {
+            TGMTAts.panel_[50] = 1;
+        }
+
+        private void OnJPressed(object sender, EventArgs e)
+        {
+            if (TGMTAts.panel_[50] == 1) selectedMode = 4;
+            TGMTAts.panel_[50] = 0;
+
+        }
+
+        private void OnIPressed(object sender, EventArgs e)
+        {
+            if (TGMTAts.panel_[50] == 1) selectedMode = 3;
+            TGMTAts.panel_[50] = 0;
         }
 
         private void OnA1Up(object sender, EventArgs e) => a1Down = false;

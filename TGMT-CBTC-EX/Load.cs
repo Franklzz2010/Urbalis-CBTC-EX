@@ -27,7 +27,8 @@ namespace TGMTAts.OBCU {
 
         public static List<string> debugMessages = new List<string>();
 
-        // 0: RM; 1: CM-ITC; 2: CM-CBTC; 3: AM-ITC; 4: AM-CBTC; 5: XAM
+        //Urbalis只有AM-BM和AM-CBTC两个预选模式
+        // 0: RM; 1: CM-ITC; 2: CM-CBTC; 3: AM-BM; 4: AM-CBTC; 5: XAM
         public static int selectedMode = 4;
         // 0: RM; 1: CM; 2: AM; 3: XAM
         public static int driveMode = 1;
@@ -67,7 +68,7 @@ namespace TGMTAts.OBCU {
         public static HarmonyLib.Harmony harmony;
 
         public static TextureHandle hTDTTex;
-        public static TextureHandle hHMITex;
+        public static TouchTextureHandle hHMITex;
         public static TextureHandle hHMI2Tex;
 
         public static Msg msg1 = new Msg();
@@ -91,7 +92,10 @@ namespace TGMTAts.OBCU {
             try {
                 //TextureManager.Initialize();
                 TGMTPainter.Initialize();
-                hHMITex = TextureManager.Register(Config.HMIImageSuffix, 1024, 1024);
+                hHMITex = TouchManager.Register(Config.HMIImageSuffix, 1024, 1024);
+                TouchManager.EnableEvent(MouseButtons.Left, TouchManager.EventType.Down);
+                hHMITex.SetClickableArea(0, 0, 800, 600);
+                hHMITex.MouseDown += OnHMITexMouseDown;
                 hTDTTex = TextureManager.Register(Config.TDTImageSuffix, 256, 256);
                 hHMI2Tex = TextureManager.Register(Config.HMI2ImageSuffix, 1024, 1024);
             } catch (Exception ex) {
@@ -143,6 +147,10 @@ namespace TGMTAts.OBCU {
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.B2].Pressed -= OnB2Pressed;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.C1].Pressed -= OnC1Pressed;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.C2].Pressed -= OnC2Pressed;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.I].Pressed -= OnIPressed;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.J].Pressed -= OnJPressed;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.K].Pressed -= OnKPressed;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.L].Pressed -= OnLPressed;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.A1].Released -= OnA1Up;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.B1].Released -= OnB1Up;
 
@@ -162,5 +170,30 @@ namespace TGMTAts.OBCU {
             var sec = time % 60;
             debugMessages.Add(string.Format("{0:D2}:{1:D2}:{2:D2} {3}", Convert.ToInt32(hrs), Convert.ToInt32(min), Convert.ToInt32(sec), msg));
         }
+
+        private static void OnHMITexMouseDown(object sender, TouchEventArgs e)
+        {
+            //强制后备模式提示框
+            if (TGMTAts.panel_[50] == 1)
+            {
+                if (e.Y >= 437 && e.Y <= 483)
+                {
+                    if (e.X >= 586 && e.X <= 661)
+                    {
+                        if (TGMTAts.panel_[50] == 1) selectedMode = 3;
+                        TGMTAts.panel_[50] = 0;
+                    }
+                    else if (e.X >= 682 && e.X <= 758)
+                    {
+                        if (TGMTAts.panel_[50] == 1) selectedMode = 4;
+                        TGMTAts.panel_[50] = 0;
+                    }
+                }
+            }
+
+
+        
+        }
+
     }
 }
