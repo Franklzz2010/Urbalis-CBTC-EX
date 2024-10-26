@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TGMTAts.WCU {
+namespace UrbalisAts.WCU {
     public static class Config {
 
         public const double LessInf = 100000000;

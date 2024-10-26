@@ -5,8 +5,8 @@ using System.Runtime.InteropServices;
 using AtsEx.PluginHost.Plugins;
 using SlimDX.XInput;
 
-namespace TGMTAts.OBCU{
-    public partial class TGMTAts : AssemblyPluginBase {
+namespace UrbalisAts.OBCU{
+    public partial class UrbalisAts : AssemblyPluginBase {
 
         private static bool a1Down, b1Down;
 
@@ -54,7 +54,7 @@ namespace TGMTAts.OBCU{
         {
             if (time - selectModeStartTime > 1000)
             {
-                TGMTAts.panel_[50] = 1;
+                UrbalisAts.panel_[50] = 1;
             }
         }
         private void OnLUp(object sender, EventArgs e)
@@ -91,8 +91,8 @@ namespace TGMTAts.OBCU{
                     trackLimit.SetBeacon(e);
                     break;
                 case 96824:
-                    TGMTAts.panel_[200] = e.Optional;
-                    TGMTAts.Log("下一车站站号：" + TGMTAts.panel_[200].ToString());
+                    UrbalisAts.panel_[200] = e.Optional;
+                    UrbalisAts.Log("下一车站站号：" + UrbalisAts.panel_[200].ToString());
                     break;
                 case 96825:
                     DestinationNumber = e.Optional;
@@ -128,7 +128,7 @@ namespace TGMTAts.OBCU{
                     FixIncompatibleModes();
                     break;
                 /*case 96890:
-                    TGMTAts.panel_[201] = e.Optional;
+                    UrbalisAts.panel_[201] = e.Optional;
                     Log(Convert.ToString(panel_[201]));
                     break;*/
             }

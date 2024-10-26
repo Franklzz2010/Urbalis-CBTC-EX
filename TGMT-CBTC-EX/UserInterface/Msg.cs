@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TGMTAts.OBCU.UserInterface
+namespace UrbalisAts.OBCU.UserInterface
 {
     public class Msg
     {

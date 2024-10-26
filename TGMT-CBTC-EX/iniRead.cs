@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace TGMTAts.OBCU
+namespace UrbalisAts.OBCU
 {
     class FilesINI
     {

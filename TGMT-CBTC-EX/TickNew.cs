@@ -14,11 +14,11 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using MapPlugin = TGMTAts.WCU.PluginMain;
+using MapPlugin = UrbalisAts.WCU.PluginMain;
 
-namespace TGMTAts.OBCU {
+namespace UrbalisAts.OBCU {
     [PluginType(PluginType.VehiclePlugin)]
-    public partial class TGMTAts : AssemblyPluginBase {
+    public partial class UrbalisAts : AssemblyPluginBase {
         public static MapPlugin mapPlugin;
 
         internal static SpeedLimit nextLimit;
@@ -30,7 +30,7 @@ namespace TGMTAts.OBCU {
 
         private readonly IAtsSound atsSound0, atsSound1, atsSound2;
         private readonly IAtsPanelValue<int> atsPanel36, atsPanel40, atsPanel41;
-        public TGMTAts(PluginBuilder services) : base(services) { 
+        public UrbalisAts(PluginBuilder services) : base(services) { 
             Load();
             ;
             atsSound0 = Native.AtsSounds.Register(0);
@@ -69,7 +69,7 @@ namespace TGMTAts.OBCU {
             var state = Native.VehicleState;
 
 
-            if (TGMTAts.initTimeMode == true)
+            if (UrbalisAts.initTimeMode == true)
             { 
                 msg1.MsgTime = msg2.MsgTime = msg3.MsgTime = TimeFormatter.MiliSecondToShortString(state.Time.TotalMilliseconds);
 
@@ -77,7 +77,7 @@ namespace TGMTAts.OBCU {
                 msg2.MsgID = 13;
                 msg3.MsgID = 12;
 
-                TGMTAts.initTimeMode = false;
+                UrbalisAts.initTimeMode = false;
             }
 
 
@@ -105,7 +105,7 @@ namespace TGMTAts.OBCU {
             //释放速度抑制计算
 
             //未进站
-            if (TGMTAts.movementEndpoint.Location > MapStationManager.NextStation.StopPosition
+            if (UrbalisAts.movementEndpoint.Location > MapStationManager.NextStation.StopPosition
                 && !MapStationManager.Arrived && state.Location < MapStationManager.NextStation.StopPosition + Config.StationEndDistance
                 && !MapStationManager.NextStation.Pass)
             {
@@ -192,40 +192,40 @@ namespace TGMTAts.OBCU {
                 }
             }
 
-            if (targetSpeed < ebSpeed && TGMTAts.panel_[18] == 0 && TGMTAts.driveMode == 1)
+            if (targetSpeed < ebSpeed && UrbalisAts.panel_[18] == 0 && UrbalisAts.driveMode == 1)
             {
                 if (ebSpeed - targetSpeed > 60 && targetDistance < 1000)
                 {
-                    TGMTAts.panel_[109] = 1;
+                    UrbalisAts.panel_[109] = 1;
                     atsSound1.Play();
                 }
                 else if(ebSpeed - targetSpeed > 40 && targetDistance < 750)
                 {
-                    TGMTAts.panel_[109] = 1;
+                    UrbalisAts.panel_[109] = 1;
                     atsSound1.Play();
                 }
                 else if (ebSpeed - targetSpeed > 20 && targetDistance < 500)
                 {
-                    TGMTAts.panel_[109] = 1;
+                    UrbalisAts.panel_[109] = 1;
                     atsSound1.Play();
                 }
                 else if (ebSpeed - targetSpeed > 10 && targetDistance < 250)
                 {
-                    TGMTAts.panel_[109] = 1;
+                    UrbalisAts.panel_[109] = 1;
                     atsSound1.Play();
                 }else if (targetDistance < 100)
                 {
-                    TGMTAts.panel_[109] = 1;
+                    UrbalisAts.panel_[109] = 1;
                     atsSound1.Play();
                 }
                 else
                 {
-                    TGMTAts.panel_[109] = 0;
+                    UrbalisAts.panel_[109] = 0;
                 }
             }
             else
             {
-                TGMTAts.panel_[109] = 0;
+                UrbalisAts.panel_[109] = 0;
             }
 
             // 显示速度、预选模式、驾驶模式、控制级别、车门模式
@@ -393,7 +393,7 @@ namespace TGMTAts.OBCU {
                 // 有移动授权
                 if (state.Speed == 0 && handles.Power.Notch == 0) {
                     // 低于制动缓解速度
-                    if (ebState > 0 && TGMTAts.signalMode >= 2) {
+                    if (ebState > 0 && UrbalisAts.signalMode >= 2) {
                         if (location > movementEndpoint.Location) {
                             // 冲出移动授权终点，要求RM
                             ackMessage = 6;
@@ -518,14 +518,14 @@ namespace TGMTAts.OBCU {
             // 显示TDT、车门使能，车门零速保护
             if (MapStationManager.NextStation != null) {
                 int depTime = Convert.ToInt32(TimeFormatter.MiliSecondToInt(state.Time.TotalMilliseconds) - TimeFormatter.MiliSecondToInt(MapStationManager.NextStation.DepartureTime));
-                //int stopTime = Convert.ToInt32((state.Time.TotalMilliseconds / 1000) - (TGMTAts.panel_[201] + TGMTAts.panel_[202]));
+                //int stopTime = Convert.ToInt32((state.Time.TotalMilliseconds / 1000) - (UrbalisAts.panel_[201] + UrbalisAts.panel_[202]));
                 //int timeToDep = Math.Min(depTime, stopTime);
                 if (depTime <= 0) {
-                    TGMTAts.panel_[106] = depTime;
+                    UrbalisAts.panel_[106] = depTime;
                 }
                 else
                 {
-                    TGMTAts.panel_[106] = 0;
+                    UrbalisAts.panel_[106] = 0;
                 }
                 if (MapStationManager.Arrived) {
                     // 已停稳，可开始显示TDT
@@ -566,7 +566,7 @@ namespace TGMTAts.OBCU {
                         // 在停车窗口内
                         if (state.Speed < 1) {
                             panel_[26] = 2;
-                            TGMTAts.nextStationNumber = TGMTAts.panel_[200];
+                            UrbalisAts.nextStationNumber = UrbalisAts.panel_[200];
                         } else {
                             panel_[26] = 1;
                         }
@@ -642,7 +642,7 @@ namespace TGMTAts.OBCU {
                 }
             }
 
-            if (TGMTAts.signalMode > 1 && MapStationManager.NextStation.Pass && Math.Abs(MapStationManager.NextStation.StopPosition - location) < Config.StationStartDistance + 200) panel_[32] = 3;
+            if (UrbalisAts.signalMode > 1 && MapStationManager.NextStation.Pass && Math.Abs(MapStationManager.NextStation.StopPosition - location) < Config.StationStartDistance + 200) panel_[32] = 3;
 
             // 信号灯
             if (signalMode >= 2) {
@@ -664,9 +664,9 @@ namespace TGMTAts.OBCU {
             }
 
             //菜单自动收起
-            if (state.Speed != 0) TGMTAts.panel_[50] = TGMTAts.panel_[51] = TGMTAts.panel_[61] = 0;
+            if (state.Speed != 0) UrbalisAts.panel_[50] = UrbalisAts.panel_[51] = UrbalisAts.panel_[61] = 0;
 
-            TGMTAts.panel_[108] = Convert.ToInt32(targetDistance);
+            UrbalisAts.panel_[108] = Convert.ToInt32(targetDistance);
 
             NotchCommandBase powerCommand = handles.Power.GetCommandToSetNotchTo(Math.Max(pCommand, handles.Power.Notch));
             NotchCommandBase brakeCommand = handles.Brake.GetCommandToSetNotchTo(Math.Max(bCommand, handles.Brake.Notch));

@@ -15,9 +15,9 @@ using System.Runtime.InteropServices.ComTypes;
 using BveTypes.ClassWrappers;
 using AtsEx.PluginHost;
 using AtsEx.PluginHost.Handles;
-using TGMTAts.OBCU.UserInterface;
+using UrbalisAts.OBCU.UserInterface;
 
-namespace TGMTAts.OBCU {
+namespace UrbalisAts.OBCU {
 
     public static class TGMTPainter {
 
@@ -101,58 +101,58 @@ namespace TGMTAts.OBCU {
             hHMI.BeginGDI();
             hHMI.DrawImage(hmi, 0, 0);
 
-            if (TGMTAts.driveMode == 0)
+            if (UrbalisAts.driveMode == 0)
             {
                 hHMI.DrawImage(rmpanel, 138, 73);
             }
 
-            if (TGMTAts.panel_[102] != 0)
+            if (UrbalisAts.panel_[102] != 0)
             {
                 if (state.Speed == 0)
                 {
-                    TGMTAts.panel_[105] = 1;
+                    UrbalisAts.panel_[105] = 1;
                 }
                 else
                 {
-                    TGMTAts.panel_[105] = 0;
+                    UrbalisAts.panel_[105] = 0;
                 }
             }
             else
             {
-                TGMTAts.panel_[105] = 0;
+                UrbalisAts.panel_[105] = 0;
             }
 
-            if (TGMTAts.selectingMode == -1 && TGMTAts.ackMessage == 0)
+            if (UrbalisAts.selectingMode == -1 && UrbalisAts.ackMessage == 0)
             {
-                hHMI.DrawImage(msg, 115, 480, TGMTAts.msg1.MsgID * 18, 18);
-                hHMI.DrawImage(msg, 115, 501, TGMTAts.msg2.MsgID * 18, 18);
-                hHMI.DrawImage(msg, 115, 522, TGMTAts.msg3.MsgID * 18, 18);
+                hHMI.DrawImage(msg, 115, 480, UrbalisAts.msg1.MsgID * 18, 18);
+                hHMI.DrawImage(msg, 115, 501, UrbalisAts.msg2.MsgID * 18, 18);
+                hHMI.DrawImage(msg, 115, 522, UrbalisAts.msg3.MsgID * 18, 18);
             }
             
 
 
-            hHMI.DrawImage(menu, 455, 520, TGMTAts.panel_[23] * 64, 64);
-            hHMI.DrawImage(drvmode, 530, 133, TGMTAts.panel_[24] * 64, 64);
-            hHMI.DrawImage(sigmode, 655, 133, TGMTAts.panel_[25] * 64, 64);
-            hHMI.DrawImage(stopsig, 670, 200, TGMTAts.panel_[26] * 64, 64);
-            hHMI.DrawImage(dorrel, 530, 267, TGMTAts.panel_[27] * 64, 64);
-            hHMI.DrawImage(dormode, 530, 337, TGMTAts.panel_[28] * 64, 64);
-            hHMI.DrawImage(departure, 670, 267, TGMTAts.panel_[32] * 64, 64);
-            hHMI.DrawImage(emergency, 670, 337, TGMTAts.panel_[29] * 64, 64);
-            hHMI.DrawImage(fault, 530, 405, TGMTAts.panel_[30] * 64, 64);
-            hHMI.DrawImage(special, 670, 405, TGMTAts.panel_[31] * 64, 64);
+            hHMI.DrawImage(menu, 455, 520, UrbalisAts.panel_[23] * 64, 64);
+            hHMI.DrawImage(drvmode, 530, 133, UrbalisAts.panel_[24] * 64, 64);
+            hHMI.DrawImage(sigmode, 655, 133, UrbalisAts.panel_[25] * 64, 64);
+            hHMI.DrawImage(stopsig, 670, 200, UrbalisAts.panel_[26] * 64, 64);
+            hHMI.DrawImage(dorrel, 530, 267, UrbalisAts.panel_[27] * 64, 64);
+            hHMI.DrawImage(dormode, 530, 337, UrbalisAts.panel_[28] * 64, 64);
+            hHMI.DrawImage(departure, 670, 267, UrbalisAts.panel_[32] * 64, 64);
+            hHMI.DrawImage(emergency, 670, 337, UrbalisAts.panel_[29] * 64, 64);
+            hHMI.DrawImage(fault, 530, 405, UrbalisAts.panel_[30] * 64, 64);
+            hHMI.DrawImage(special, 670, 405, UrbalisAts.panel_[31] * 64, 64);
 
-            if (TGMTAts.selectingMode != -1 || TGMTAts.ackMessage != 0)
+            if (UrbalisAts.selectingMode != -1 || UrbalisAts.ackMessage != 0)
             {
-                hHMI.DrawImage(ackcmd, 55, 475, TGMTAts.panel_[35] * 70, 70);
+                hHMI.DrawImage(ackcmd, 55, 475, UrbalisAts.panel_[35] * 70, 70);
             }
                         
-            hHMI.DrawImage(atoctrl, 32, 380, TGMTAts.panel_[21] * 64, 64);
-            hHMI.DrawImage(selmode, 130, 380, TGMTAts.panel_[22] * 64, 64);
-            hHMI.DrawImage(hmitdt, 530, 70, TGMTAts.panel_[105] * 64, 64);
-            hHMI.DrawImage(life, 15, 560, TGMTAts.panel_[107] * 40, 40);
+            hHMI.DrawImage(atoctrl, 32, 380, UrbalisAts.panel_[21] * 64, 64);
+            hHMI.DrawImage(selmode, 130, 380, UrbalisAts.panel_[22] * 64, 64);
+            hHMI.DrawImage(hmitdt, 530, 70, UrbalisAts.panel_[105] * 64, 64);
+            hHMI.DrawImage(life, 15, 560, UrbalisAts.panel_[107] * 40, 40);
 
-            if (TGMTAts.panel_[109] == 1)
+            if (UrbalisAts.panel_[109] == 1)
             {
                 hHMI.DrawImage(distance, 10, 144);
             }
@@ -160,11 +160,11 @@ namespace TGMTAts.OBCU {
             hHMI.DrawImage(num0, 289, 212, D((int)Math.Abs(Math.Ceiling(state.Speed)), 0) * 18, 18);
             hHMI.DrawImage(numn0, 275, 212, D((int)Math.Abs(Math.Ceiling(state.Speed)), 1) * 18, 18);
 
-            if (TGMTAts.panel_[50] == 1) hHMI.DrawImage(bmconfirm, 555, 400);
+            if (UrbalisAts.panel_[50] == 1) hHMI.DrawImage(bmconfirm, 555, 400);
 
-            if (TGMTAts.panel_[61] == 1) hHMI.DrawImage(crewnumenter, 525, 108);
+            if (UrbalisAts.panel_[61] == 1) hHMI.DrawImage(crewnumenter, 525, 108);
 
-            if (TGMTAts.panel_[51] == 1) hHMI.DrawImage(menuext, 479, 9);
+            if (UrbalisAts.panel_[51] == 1) hHMI.DrawImage(menuext, 479, 9);
 
             hHMI.EndGDI();
 
@@ -172,43 +172,43 @@ namespace TGMTAts.OBCU {
             stringC.Alignment = StringAlignment.Center;
 
             //司机号
-            if (TGMTAts.panel_[51] == 0)
+            if (UrbalisAts.panel_[51] == 0)
             {
-                hHMI.Graphics.DrawString(Convert.ToString(TGMTAts.panel_[63]).PadLeft(3, '0'), crewNumFont, new SolidBrush(Color.FromArgb(0, 0, 0)), 704, 30);
-                if (TGMTAts.panel_[61] == 1 && TGMTAts.panel_[62] != 0) hHMI.Graphics.DrawString(HMITouch.crewNumberPreEnterStr, drawFont, new SolidBrush(Color.FromArgb(0, 0, 0)), 653, 171, stringC);
+                hHMI.Graphics.DrawString(Convert.ToString(UrbalisAts.panel_[63]).PadLeft(3, '0'), crewNumFont, new SolidBrush(Color.FromArgb(0, 0, 0)), 704, 30);
+                if (UrbalisAts.panel_[61] == 1 && UrbalisAts.panel_[62] != 0) hHMI.Graphics.DrawString(HMITouch.crewNumberPreEnterStr, drawFont, new SolidBrush(Color.FromArgb(0, 0, 0)), 653, 171, stringC);
 
             }   
 
 
-            if (TGMTAts.selectingMode == -1 && TGMTAts.ackMessage == 0)
+            if (UrbalisAts.selectingMode == -1 && UrbalisAts.ackMessage == 0)
             {
-                hHMI.Graphics.DrawString(TGMTAts.msg1.MsgTime, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 83, 479, stringC);
-                hHMI.Graphics.DrawString(TGMTAts.msg2.MsgTime, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 83, 499, stringC);
-                hHMI.Graphics.DrawString(TGMTAts.msg3.MsgTime, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 83, 519, stringC);
+                hHMI.Graphics.DrawString(UrbalisAts.msg1.MsgTime, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 83, 479, stringC);
+                hHMI.Graphics.DrawString(UrbalisAts.msg2.MsgTime, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 83, 499, stringC);
+                hHMI.Graphics.DrawString(UrbalisAts.msg3.MsgTime, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 83, 519, stringC);
             }
 
-            hHMI.Graphics.FillRectangle(overspeed[TGMTAts.panel_[10]], new Rectangle(20, 18, 80, 78));
-            if (TGMTAts.panel_[36] != 0 && TGMTAts.time % 500 < 250) {
+            hHMI.Graphics.FillRectangle(overspeed[UrbalisAts.panel_[10]], new Rectangle(20, 18, 80, 78));
+            if (UrbalisAts.panel_[36] != 0 && UrbalisAts.time % 500 < 250) {
                 hHMI.Graphics.DrawRectangle(ackPen, new Rectangle(53, 473, 280, 70));
             }
-            if (TGMTAts.panel_[15] >= 0) {
-                var tRecommend = ((double)TGMTAts.panel_[15] / 400 * 288 - 144) / 180 * Math.PI;
+            if (UrbalisAts.panel_[15] >= 0) {
+                var tRecommend = ((double)UrbalisAts.panel_[15] / 400 * 288 - 144) / 180 * Math.PI;
                 hHMI.Graphics.FillPolygon(Brushes.Yellow, new Point[] {
                     Poc(288, 221, 130, 0, tRecommend), Poc(288, 221, 150, -11, tRecommend), Poc(288, 221, 150, 11, tRecommend)
                 });
             }
-            if (TGMTAts.panel_[16] >= 0) {
-                var tLimit = ((double)TGMTAts.panel_[16] / 400 * 288 - 144) / 180 * Math.PI;
+            if (UrbalisAts.panel_[16] >= 0) {
+                var tLimit = ((double)UrbalisAts.panel_[16] / 400 * 288 - 144) / 180 * Math.PI;
                 hHMI.Graphics.FillPolygon(Brushes.Red, new Point[] {
                     Poc(288, 221, 130, 0, tLimit), Poc(288, 221, 150, -11, tLimit), Poc(288, 221, 150, 11, tLimit)
                 });
             }
-            var tSpeed = ((double)TGMTAts.panel_[1] / 400 * 288 - 144) / 180 * Math.PI;
-            if (TGMTAts.panel_[15] >= 0)
+            var tSpeed = ((double)UrbalisAts.panel_[1] / 400 * 288 - 144) / 180 * Math.PI;
+            if (UrbalisAts.panel_[15] >= 0)
             {
-                var tRecommend = ((double)TGMTAts.panel_[15] / 400 * 288 - 144) / 180 * Math.PI;
-                var tLimit = ((double)TGMTAts.panel_[16] / 400 * 288 - 144) / 180 * Math.PI;
-                if (TGMTAts.panel_[29] == 2)
+                var tRecommend = ((double)UrbalisAts.panel_[15] / 400 * 288 - 144) / 180 * Math.PI;
+                var tLimit = ((double)UrbalisAts.panel_[16] / 400 * 288 - 144) / 180 * Math.PI;
+                if (UrbalisAts.panel_[29] == 2)
                 {
                     hHMI.Graphics.DrawEllipse(circlePenRed, new Rectangle(255, 188, 66, 66));
                     hHMI.Graphics.DrawLine(needlePenRed, Poc(288, 221, 33, 0, tSpeed), Poc(288, 221, 72, 0, tSpeed));
@@ -250,16 +250,16 @@ namespace TGMTAts.OBCU {
             }
 
             //HMI上TDT显示的数字
-            if (TGMTAts.panel_[105] == 1 && TGMTAts.panel_[51] == 0)
+            if (UrbalisAts.panel_[105] == 1 && UrbalisAts.panel_[51] == 0)
             {
-                hHMI.Graphics.DrawString(Convert.ToString(Math.Abs(TGMTAts.panel_[106])), drawFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 715, 82, stringC);
+                hHMI.Graphics.DrawString(Convert.ToString(Math.Abs(UrbalisAts.panel_[106])), drawFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 715, 82, stringC);
             }
             
 
-            if (TGMTAts.panel_[107] != 5)
+            if (UrbalisAts.panel_[107] != 5)
             {
                 if (counter == 0) {
-                TGMTAts.panel_[107]++;
+                UrbalisAts.panel_[107]++;
                 counter++;
             }
             else if (counter == 5)
@@ -275,7 +275,7 @@ namespace TGMTAts.OBCU {
             {
                 if (counter == 0)
                 {
-                    TGMTAts.panel_[107] = 0;
+                    UrbalisAts.panel_[107] = 0;
                     counter++;
                 }
                 else if (counter == 5)
@@ -293,11 +293,11 @@ namespace TGMTAts.OBCU {
             hHMI.Graphics.DrawString(System.DateTime.Now.ToShortDateString(), timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 100, 568);
 
 
-            if (TGMTAts.panel_[109] == 1)
+            if (UrbalisAts.panel_[109] == 1)
             {
-                hHMI.Graphics.FillRectangle(targetColor[TGMTAts.panel_[13] * 1 + TGMTAts.panel_[14] * 2], new Rectangle(68, 354 - TGMTAts.panel_[11], 20, TGMTAts.panel_[11]));
-                hHMI.Graphics.DrawString(Convert.ToString(TGMTAts.panel_[17]), drawFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 77, 104, stringC);
-                hHMI.Graphics.DrawString(Convert.ToString(TGMTAts.panel_[108]) + "m", distanceFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 128, 333, stringC);
+                hHMI.Graphics.FillRectangle(targetColor[UrbalisAts.panel_[13] * 1 + UrbalisAts.panel_[14] * 2], new Rectangle(68, 354 - UrbalisAts.panel_[11], 20, UrbalisAts.panel_[11]));
+                hHMI.Graphics.DrawString(Convert.ToString(UrbalisAts.panel_[17]), drawFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 77, 104, stringC);
+                hHMI.Graphics.DrawString(Convert.ToString(UrbalisAts.panel_[108]) + "m", distanceFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 128, 333, stringC);
             }
 
 
@@ -312,18 +312,18 @@ namespace TGMTAts.OBCU {
 
 
             FilesINI ConfigINI = new FilesINI();
-            string stationNameStr = ConfigINI.INIRead("station", Convert.ToString(TGMTAts.nextStationNumber), INIPath);
+            string stationNameStr = ConfigINI.INIRead("station", Convert.ToString(UrbalisAts.nextStationNumber), INIPath);
             hHMI.Graphics.DrawString(stationNameStr, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), nextStationDisplayX, nextStationDisplayY, stringC);
-            string destStationNameStr = ConfigINI.INIRead("station", Convert.ToString(TGMTAts.DestinationNumber), INIPath);
+            string destStationNameStr = ConfigINI.INIRead("station", Convert.ToString(UrbalisAts.DestinationNumber), INIPath);
             hHMI.Graphics.DrawString(destStationNameStr, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), destStationDisplayX, destStationDisplayY, stringC);
 
-            if (TGMTAts.panel_[105] == 1)
+            if (UrbalisAts.panel_[105] == 1)
             {
                 hHMI.Graphics.DrawString("发车时间", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), depTimeDisplayX, 20, stringC);
                 hHMI.Graphics.DrawString(TimeFormatter.MiliSecondToString(MapStationManager.NextStation.DepartureTime), timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), depTimeDisplayX, depTimeDisplayY, stringC);
             }
 
-            if (TGMTAts.panel_[51] == 0) hHMI.Graphics.DrawString("T" + TGMTAts.TrainNumber, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 600, 20, stringC);
+            if (UrbalisAts.panel_[51] == 0) hHMI.Graphics.DrawString("T" + UrbalisAts.TrainNumber, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 600, 20, stringC);
 
             hHMI.Graphics.DrawString("终点站", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), destStationDisplayX, 20, stringC);
             hHMI.Graphics.DrawString("下一站", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), nextStationDisplayX, 20, stringC);
@@ -338,7 +338,7 @@ namespace TGMTAts.OBCU {
             {
                 arrived= true;
             }
-            else if (MapStationManager.Arrived && TGMTAts.panel_[106] == 0)
+            else if (MapStationManager.Arrived && UrbalisAts.panel_[106] == 0)
             {
                 arrived = true;
             }
@@ -360,13 +360,13 @@ namespace TGMTAts.OBCU {
 
         static int last101 = 0, last102 = 0;
         public static GDIHelper PaintTDT(AtsEx.PluginHost.Native.VehicleState state) {
-            if (TGMTAts.panel_[101] == last101 && TGMTAts.panel_[102] == last102) return null;
+            if (UrbalisAts.panel_[101] == last101 && UrbalisAts.panel_[102] == last102) return null;
             hTDT.BeginGDI();
             Image digitImage;
-            if (TGMTAts.panel_[102] == -1) {
+            if (UrbalisAts.panel_[102] == -1) {
                 hTDT.DrawImage(tdtbackred, 0, 0);
                 digitImage = tdtdigitsred;
-            } else if (TGMTAts.panel_[102] == 1) {
+            } else if (UrbalisAts.panel_[102] == 1) {
                 hTDT.DrawImage(tdtbackgreen, 0, 0);
                 digitImage = tdtdigitsgreen;
             } else {
@@ -380,21 +380,21 @@ namespace TGMTAts.OBCU {
                 {
                     var xpos = 152 - 55 * i;
                     hTDT.Graphics.SetClip(new Rectangle(xpos, 67, 60, 120));
-                    var di = D(TGMTAts.panel_[101], i);
+                    var di = D(UrbalisAts.panel_[101], i);
                     if (di == 10) di = 0;
                     hTDT.Graphics.DrawImageUnscaled(digitImage, xpos, 67 - 120 * di);
                 }
-                /*if (TGMTAts.panel_[102] == -1)
+                /*if (UrbalisAts.panel_[102] == -1)
                 {
 
                 }
-                else if (TGMTAts.panel_[102] == 1)
+                else if (UrbalisAts.panel_[102] == 1)
                 {
                     hTDT.DrawImage(tdtdigitsgreen, 0, 0);
                 }*/
             }
 
-            last101 = TGMTAts.panel_[101]; last102 = TGMTAts.panel_[102];
+            last101 = UrbalisAts.panel_[101]; last102 = UrbalisAts.panel_[102];
             return hTDT;
         }
 
@@ -409,7 +409,7 @@ namespace TGMTAts.OBCU {
             hHMI2.BeginGDI();
             hHMI2.DrawImage(hmi2, 0, 0);
 
-            if (TGMTAts.doorOpen)
+            if (UrbalisAts.doorOpen)
             {
                 switch (MapStationManager.NextStation.DoorOpenType)
                 {
@@ -499,7 +499,7 @@ namespace TGMTAts.OBCU {
                 }
             }
 
-            switch (TGMTAts.signalMode)
+            switch (UrbalisAts.signalMode)
             {
                 case 0:
                     trainsigmode = "IXL";
@@ -515,7 +515,7 @@ namespace TGMTAts.OBCU {
                     break;
             }
 
-            switch (TGMTAts.driveMode)
+            switch (UrbalisAts.driveMode)
             {
                 case 0:
                     traindrvmode = "RM";
@@ -530,7 +530,7 @@ namespace TGMTAts.OBCU {
 
             string trainmode = trainsigmode + "-" + traindrvmode + "-" + traindormode;
 
-            switch (TGMTAts.selectedMode)
+            switch (UrbalisAts.selectedMode)
             {
                 case 0:
                     trainselmode = "RM";
@@ -657,7 +657,7 @@ namespace TGMTAts.OBCU {
 
 
 
-            if (TGMTAts.doorOpen)
+            if (UrbalisAts.doorOpen)
             {
                 hHMI2.DrawImage(hmi2Red, cabX_[1], listY_[7]);
                 hHMI2.DrawImage(hmi2Red, cabX_[2], listY_[7]);
@@ -683,8 +683,8 @@ namespace TGMTAts.OBCU {
 
             
             FilesINI ConfigINI = new FilesINI();
-            string stationNameStr = ConfigINI.INIRead("station", Convert.ToString(TGMTAts.nextStationNumber), INIPath);
-            string destStationNameStr = ConfigINI.INIRead("station", Convert.ToString(TGMTAts.DestinationNumber), INIPath);
+            string stationNameStr = ConfigINI.INIRead("station", Convert.ToString(UrbalisAts.nextStationNumber), INIPath);
+            string destStationNameStr = ConfigINI.INIRead("station", Convert.ToString(UrbalisAts.DestinationNumber), INIPath);
 
 
 
@@ -694,15 +694,15 @@ namespace TGMTAts.OBCU {
             double ampere = Math.Round(Convert.ToDouble(state.Current), 1);
             string ampereF = ampere.ToString("0.0");
 
-            string trainnumberStr = Convert.ToString(TGMTAts.TrainNumber);
+            string trainnumberStr = Convert.ToString(UrbalisAts.TrainNumber);
 
             string tgspeed = "?";
             string tgdistance = "?";
 
-            if (TGMTAts.panel_[109] == 1)
+            if (UrbalisAts.panel_[109] == 1)
             {
-                tgspeed = Convert.ToString(TGMTAts.panel_[17]) + "km/h";
-                tgdistance = Convert.ToString(TGMTAts.panel_[108]) + "m";
+                tgspeed = Convert.ToString(UrbalisAts.panel_[17]) + "km/h";
+                tgdistance = Convert.ToString(UrbalisAts.panel_[108]) + "m";
             }
 
             //时间

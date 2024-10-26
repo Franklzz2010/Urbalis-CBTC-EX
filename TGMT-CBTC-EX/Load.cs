@@ -13,10 +13,10 @@ using AtsEx.PluginHost.Input.Native;
 using SlimDX.DirectInput;
 using System.Security.Cryptography;
 using System.Text;
-using TGMTAts.OBCU.UserInterface;
+using UrbalisAts.OBCU.UserInterface;
 
-namespace TGMTAts.OBCU {
-    public partial class TGMTAts : AssemblyPluginBase {
+namespace UrbalisAts.OBCU {
+    public partial class UrbalisAts : AssemblyPluginBase {
 
         public static int[] panel_ = new int[256];
         public static bool doorOpen;
@@ -75,7 +75,7 @@ namespace TGMTAts.OBCU {
         public static Msg msg2 = new Msg();
         public static Msg msg3 = new Msg();
 
-        static TGMTAts() {
+        static UrbalisAts() {
             Config.Load(Path.Combine(Config.PluginDir, "TGMTConfig.txt"));
             //AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
         }

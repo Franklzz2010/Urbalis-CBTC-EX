@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace TGMTAts.OBCU {
+namespace UrbalisAts.OBCU {
 
     static class Ato {
 
@@ -18,10 +18,10 @@ namespace TGMTAts.OBCU {
         }
 
         public static void UpdateAccel(double speed, double recSpeed) {
-            if (TGMTAts.time - lastRecTime > 100) {
-                recAccel = (recSpeed - lastRecSpeed) / (TGMTAts.time / 1000d - lastRecTime);
+            if (UrbalisAts.time - lastRecTime > 100) {
+                recAccel = (recSpeed - lastRecSpeed) / (UrbalisAts.time / 1000d - lastRecTime);
                 lastRecSpeed = recSpeed;
-                lastRecTime = TGMTAts.time / 1000d;
+                lastRecTime = UrbalisAts.time / 1000d;
             }
         }
 
@@ -30,7 +30,7 @@ namespace TGMTAts.OBCU {
             if (recAcc > 0) recAcc = 0;
 
             // 从 bve-autopilot 借来的算法
-            var staDist = MapStationManager.NextStation.StopPosition - TGMTAts.location;
+            var staDist = MapStationManager.NextStation.StopPosition - UrbalisAts.location;
             var decelA = speed * speed / 2 / staDist;
             var decelB = -recAcc * (speed / recSpeed) - (recSpeed - speed) / 2;
 
@@ -57,19 +57,19 @@ namespace TGMTAts.OBCU {
             var decel = GetCmdDecel(speed, recSpeed, ebSpeed);
             if (decel > 0) {
                 // 限制更改制动指令的时间，以免过于频繁地反复横跳
-                if (TGMTAts.time - lastOutputTime > 250) {
+                if (UrbalisAts.time - lastOutputTime > 250) {
                     outputNotch = -(int)Math.Round(Math.Min(decel / -Config.MaxServiceDeceleration, 1)
-                        * TGMTAts.vehicleSpec.BrakeNotches);
+                        * UrbalisAts.vehicleSpec.BrakeNotches);
                     if (outputNotch > 0) outputNotch = 0;
-                    lastOutputTime = TGMTAts.time;
+                    lastOutputTime = UrbalisAts.time;
                 }
             } else {
                 const double targetTime = 4;
                 var targetAccel = (recSpeed - speed) / targetTime + recAccel;
-                if (TGMTAts.time - lastOutputTime > 250) {
+                if (UrbalisAts.time - lastOutputTime > 250) {
                     outputNotch = (int)Math.Round(Math.Max(0, Math.Min(1, targetAccel / GetMaxAccelAt(speed)))
-                        * TGMTAts.vehicleSpec.PowerNotches);
-                    lastOutputTime = TGMTAts.time;
+                        * UrbalisAts.vehicleSpec.PowerNotches);
+                    lastOutputTime = UrbalisAts.time;
                 }
             }
             return outputNotch;
@@ -91,16 +91,16 @@ namespace TGMTAts.OBCU {
         }
 
         public static bool IsAvailable() {
-            return TGMTAts.pPower == 0 && TGMTAts.pBrake == 0 && TGMTAts.pReverser == BveTypes.ClassWrappers.ReverserPosition.F
-                    && !TGMTAts.doorOpen && TGMTAts.driveMode == 1 && TGMTAts.selectedMode > 2
-                    && TGMTAts.ebState == 0
+            return UrbalisAts.pPower == 0 && UrbalisAts.pBrake == 0 && UrbalisAts.pReverser == BveTypes.ClassWrappers.ReverserPosition.F
+                    && !UrbalisAts.doorOpen && UrbalisAts.driveMode == 1 && UrbalisAts.selectedMode > 2
+                    && UrbalisAts.ebState == 0
                     // 车站范围内不能接通ATO
-                    && (MapStationManager.NextStation.StopPosition - TGMTAts.location > Config.StationStartDistance 
+                    && (MapStationManager.NextStation.StopPosition - UrbalisAts.location > Config.StationStartDistance 
                         || MapStationManager.Arrived)
                     // 离移动授权终点太近不能接通ATO (这是现实情况吗？)
-                    && (TGMTAts.movementEndpoint.Location - TGMTAts.location > 50 || TGMTAts.releaseSpeed)
+                    && (UrbalisAts.movementEndpoint.Location - UrbalisAts.location > 50 || UrbalisAts.releaseSpeed)
                     // CTC下离前车太近不能接通ATO (这是现实情况吗？)
-                    && (TGMTAts.signalMode == 1 || PreTrainManager.GetEndpoint().Location - TGMTAts.location > 50);
+                    && (UrbalisAts.signalMode == 1 || PreTrainManager.GetEndpoint().Location - UrbalisAts.location > 50);
         }
     }
 }

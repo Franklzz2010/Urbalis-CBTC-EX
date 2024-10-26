@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TGMTAts.OBCU
+namespace UrbalisAts.OBCU
 {
     public static class MapStationManager
     {
@@ -32,7 +32,7 @@ namespace TGMTAts.OBCU
 
         public static void Update(AtsEx.PluginHost.Native.VehicleState state, bool doorState)
         {
-            switch (TGMTAts.mapPlugin.doorSide)
+            switch (UrbalisAts.mapPlugin.doorSide)
             {
                 case 1:
                     NextStation.DoorOpenType = 2;
@@ -42,25 +42,25 @@ namespace TGMTAts.OBCU
                     break;
             }
 
-            NextStation.RouteOpenTime = NextStation.DepartureTime = TGMTAts.mapPlugin.depTime;
+            NextStation.RouteOpenTime = NextStation.DepartureTime = UrbalisAts.mapPlugin.depTime;
 
-            NextStation.Pass = TGMTAts.mapPlugin.isPass;
+            NextStation.Pass = UrbalisAts.mapPlugin.isPass;
 
-            NextStation.StopPosition = TGMTAts.mapPlugin.stopPos;
+            NextStation.StopPosition = UrbalisAts.mapPlugin.stopPos;
 
 
             if (state.Speed == 0 && state.Location > NextStation.StopPosition - Config.StationStartDistance)
             {
-                if (!Stopped) TGMTAts.Log("已在站内停稳");
+                if (!Stopped) UrbalisAts.Log("已在站内停稳");
                 if (Stopped == false)
                 {
-                    TGMTAts.panel_[202] = TimeFormatter.MiliSecondToInt(state.Time.TotalMilliseconds);
+                    UrbalisAts.panel_[202] = TimeFormatter.MiliSecondToInt(state.Time.TotalMilliseconds);
                 }
                 Stopped = true;
             }
             if (doorState)
             {
-                if (!Arrived) TGMTAts.Log("已开门");
+                if (!Arrived) UrbalisAts.Log("已开门");
                 Arrived = true;
             }
             if (state.Location > NextStation.StopPosition + Config.StationEndDistance)
@@ -68,14 +68,14 @@ namespace TGMTAts.OBCU
                 NextStation = new Station();
                 Stopped = false;
                 Arrived = false;
-                TGMTAts.Log("已出站");
+                UrbalisAts.Log("已出站");
             }
 
         }
 
         public static SpeedLimit RecommendCurve()
         {
-            if (TGMTAts.signalMode > 1 && NextStation.Pass)
+            if (UrbalisAts.signalMode > 1 && NextStation.Pass)
             {
                 return SpeedLimit.inf;
             }
@@ -102,7 +102,7 @@ namespace TGMTAts.OBCU
 
         public static SpeedLimit CTCEndpoint()
         {
-            if (TGMTAts.time > NextStation.RouteOpenTime)
+            if (UrbalisAts.time > NextStation.RouteOpenTime)
             {
                 return SpeedLimit.inf;
             }

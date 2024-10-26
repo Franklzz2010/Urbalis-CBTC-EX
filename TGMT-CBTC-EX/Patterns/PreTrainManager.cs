@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 
 
-namespace TGMTAts.OBCU {
+namespace UrbalisAts.OBCU {
     
     static class PreTrainManager {
 
@@ -33,16 +33,16 @@ namespace TGMTAts.OBCU {
                     break;
                 case 96829:
                     if (Commands.Count <= 0) return;
-                    Commands[Commands.Count - 1].Time = TGMTAts.ConvertTime(data.Optional) * 1000;
+                    Commands[Commands.Count - 1].Time = UrbalisAts.ConvertTime(data.Optional) * 1000;
                     Commands.Sort((a, b) => a.Time.CompareTo(b.Time));
                     break;
             }
         }
 
         public static SpeedLimit GetEndpoint() {
-            if (Commands.Count == 0) return new SpeedLimit(0, TGMTAts.mapPlugin.MovementAuthority - Config.CTCSafetyDistance);
+            if (Commands.Count == 0) return new SpeedLimit(0, UrbalisAts.mapPlugin.MovementAuthority - Config.CTCSafetyDistance);
             int pointer = 0;
-            var time = TGMTAts.time;
+            var time = UrbalisAts.time;
             while (pointer < Commands.Count && Commands[pointer].Time < time) pointer++;
             if (pointer == 0 || pointer >= Commands.Count) {
                 return SpeedLimit.inf;
@@ -68,14 +68,14 @@ namespace TGMTAts.OBCU {
                     PreTrainSpeed = targetSpeed;
                 } else if (lastTime > 0) {
                     if (PreTrainSpeed < targetSpeed - 2) {
-                        PreTrainSpeed += Ato.GetMaxAccelAt(PreTrainSpeed) * (TGMTAts.time - lastTime) / 1000;
+                        PreTrainSpeed += Ato.GetMaxAccelAt(PreTrainSpeed) * (UrbalisAts.time - lastTime) / 1000;
                     } else if (PreTrainSpeed > targetSpeed + 2) {
-                        PreTrainSpeed += Config.MaxServiceDeceleration * 0.8 * (TGMTAts.time - lastTime) / 1000;
+                        PreTrainSpeed += Config.MaxServiceDeceleration * 0.8 * (UrbalisAts.time - lastTime) / 1000;
                     } else {
                         PreTrainSpeed = targetSpeed;
                     }
                 }
-                lastTime = TGMTAts.time;
+                lastTime = UrbalisAts.time;
                 return new SpeedLimit(Math.Round(PreTrainSpeed), trainLocation);
             }
         }

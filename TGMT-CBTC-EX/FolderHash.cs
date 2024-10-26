@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace TGMTAts.OBCU {
+namespace UrbalisAts.OBCU {
     public static class FolderHash {
 
         public static string Calculate(string dir) {

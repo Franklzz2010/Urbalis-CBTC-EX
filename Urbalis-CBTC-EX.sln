@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TGMT-CBTC-EX", "TGMT-CBTC-EX\TGMT-CBTC-EX.csproj", "{A18C1921-1E03-4FE8-A6ED-6C1FC2209F5F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Urbalis-CBTC-EX", "TGMT-CBTC-EX\Urbalis-CBTC-EX.csproj", "{A18C1921-1E03-4FE8-A6ED-6C1FC2209F5F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TGMT-CBTC-EX_WCU", "TGMT-CBTC-EX_WCU\TGMT-CBTC-EX_WCU.csproj", "{AB7EE309-F15F-4AD4-A658-D0DD210627CE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Urbalis-CBTC-EX_WCU", "TGMT-CBTC-EX_WCU\Urbalis-CBTC-EX_WCU.csproj", "{AB7EE309-F15F-4AD4-A658-D0DD210627CE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

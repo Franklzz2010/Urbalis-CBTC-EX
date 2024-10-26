@@ -9,10 +9,11 @@ using AtsEx.Extensions.PreTrainPatch;
 using System.IO;
 using System.Collections.Generic;
 using AtsEx.PluginHost.MapStatements;
+using AtsEx.Extensions.ContextMenuHacker;
 
 
 
-namespace TGMTAts.WCU {
+namespace UrbalisAts.WCU {
     [PluginType(PluginType.MapPlugin)]
     public class PluginMain : AssemblyPluginBase {
         static PluginMain() {
@@ -26,6 +27,7 @@ namespace TGMTAts.WCU {
         public int depTime { get; set; } = 0;
         public bool isPass { get; set; } = false;
         public int stopPos { get; set; } = 0;
+        public List<int> speedLimitList { get; set; } = new List<int>();
 
         private List<SignalPatch> SignalPatch = new List<SignalPatch>();
         private Train Train;
@@ -87,12 +89,14 @@ namespace TGMTAts.WCU {
 
             MovementAuthority = Train.Location;
 
-
+            
             var nextSta = BveHacker.Scenario.Route.Stations[BveHacker.Scenario.Route.Stations.CurrentIndex + 1] as Station;
             doorSide = nextSta.DoorSide;
-            depTime = nextSta.DepertureTimeMilliseconds;
+            depTime = nextSta.DepartureTimeMilliseconds;
             isPass = nextSta.Pass;
             stopPos = Convert.ToInt32(nextSta.Location);
+
+            var trackInfo = BveHacker.Scenario.Route.SpeedLimits;
 
 
 
