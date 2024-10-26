@@ -95,7 +95,7 @@ namespace TGMTAts.OBCU {
                 hHMITex = TouchManager.Register(Config.HMIImageSuffix, 1024, 1024);
                 TouchManager.EnableEvent(MouseButtons.Left, TouchManager.EventType.Down);
                 hHMITex.SetClickableArea(0, 0, 800, 600);
-                hHMITex.MouseDown += OnHMITexMouseDown;
+                hHMITex.MouseDown += HMITouch.OnHMITexMouseDown;
                 hTDTTex = TextureManager.Register(Config.TDTImageSuffix, 256, 256);
                 hHMI2Tex = TextureManager.Register(Config.HMI2ImageSuffix, 1024, 1024);
             } catch (Exception ex) {
@@ -167,40 +167,6 @@ namespace TGMTAts.OBCU {
             var min = time / 60 % 60;
             var sec = time % 60;
             debugMessages.Add(string.Format("{0:D2}:{1:D2}:{2:D2} {3}", Convert.ToInt32(hrs), Convert.ToInt32(min), Convert.ToInt32(sec), msg));
-        }
-
-        private static void OnHMITexMouseDown(object sender, TouchEventArgs e)
-        {
-            //强制后备模式提示框
-            if (TGMTAts.panel_[50] == 1)
-            {
-                if (e.Y >= 437 && e.Y <= 483)
-                {
-                    if (e.X >= 586 && e.X <= 661)
-                    {
-                        if (TGMTAts.panel_[50] == 1) selectedMode = 3;
-                        TGMTAts.panel_[50] = 0;
-                    }
-                    else if (e.X >= 682 && e.X <= 758)
-                    {
-                        if (TGMTAts.panel_[50] == 1) selectedMode = 4;
-                        TGMTAts.panel_[50] = 0;
-                    }
-                }
-            }
-
-            //菜单展开
-            if (e.X >= 456 && e.X <= 604 && e.Y >= 522 && e.Y <= 567 && TGMTAts.panel_[23] == 0 && TGMTAts.panel_[51] == 0)
-            {
-                TGMTAts.panel_[51] = 1;
-            }
-            //菜单收起
-            else if (e.X >= 498 && e.X <= 776 && e.Y >= 522 && e.Y <= 567 && TGMTAts.panel_[51] == 1)
-            {
-                TGMTAts.panel_[51] = 0;
-            }
-
-
         }
     }
 }

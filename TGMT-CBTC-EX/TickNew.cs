@@ -665,7 +665,7 @@ namespace TGMTAts.OBCU {
             }
 
             //菜单自动收起
-            if (TGMTAts.panel_[51] == 1 && TGMTAts.panel_[23] == 1) TGMTAts.panel_[51] = 0;
+            if (state.Speed != 0) TGMTAts.panel_[50] = TGMTAts.panel_[51] = TGMTAts.panel_[61] = 0;
 
             TGMTAts.panel_[108] = Convert.ToInt32(targetDistance);
 

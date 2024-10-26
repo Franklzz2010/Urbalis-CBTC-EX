@@ -55,11 +55,13 @@ namespace TGMTAts.OBCU {
             rmpanel = new Bitmap(Path.Combine(imgDir, "rmpanel.png"));
             bmconfirm = new Bitmap(Path.Combine(imgDir, "bmconfirm.png"));
             menuext = new Bitmap(Path.Combine(imgDir, "menuext.png"));
+            crewnumenter = new Bitmap(Path.Combine(imgDir, "crewnumenter.png"));
 
             drawFont = new System.Drawing.Font("思源黑体 CN Bold", 30);
             timeFont = new System.Drawing.Font("思源黑体 CN Bold", 15);
             distanceFont = new System.Drawing.Font("思源黑体 CN Bold", 16);
             hmi2Font = new System.Drawing.Font("思源黑体 CN Bold", 10);
+            crewNumFont = new System.Drawing.Font("思源黑体 CN Bold", 15);
 
             num0 = new Bitmap(Path.Combine(imgDir, "num0.png"));
             numn0 = new Bitmap(Path.Combine(imgDir, "num-0.png"));
@@ -160,12 +162,22 @@ namespace TGMTAts.OBCU {
 
             if (TGMTAts.panel_[50] == 1) hHMI.DrawImage(bmconfirm, 555, 400);
 
+            if (TGMTAts.panel_[61] == 1) hHMI.DrawImage(crewnumenter, 525, 108);
+
             if (TGMTAts.panel_[51] == 1) hHMI.DrawImage(menuext, 479, 9);
 
             hHMI.EndGDI();
 
             var stringC = new StringFormat();
             stringC.Alignment = StringAlignment.Center;
+
+            //司机号
+            if (TGMTAts.panel_[51] == 0)
+            {
+                hHMI.Graphics.DrawString(Convert.ToString(TGMTAts.panel_[63]).PadLeft(3, '0'), crewNumFont, new SolidBrush(Color.FromArgb(0, 0, 0)), 704, 30);
+                if (TGMTAts.panel_[61] == 1 && TGMTAts.panel_[62] != 0) hHMI.Graphics.DrawString(HMITouch.crewNumberPreEnterStr, drawFont, new SolidBrush(Color.FromArgb(0, 0, 0)), 653, 171, stringC);
+
+            }   
 
 
             if (TGMTAts.selectingMode == -1 && TGMTAts.ackMessage == 0)
@@ -770,11 +782,11 @@ namespace TGMTAts.OBCU {
         static Brush[] targetColor = new Brush[] { new SolidBrush(Color.Red), new SolidBrush(Color.Orange), new SolidBrush(Color.Green) };
         static Brush[] overspeed = new Brush[] { new SolidBrush(Color.Empty), new SolidBrush(Color.Orange), new SolidBrush(Color.Red) };
         static Bitmap hmi, ackcmd, atoctrl, dormode, dorrel, drvmode, emergency, fault, departure, menu,
-            selmode, sigmode, special, stopsig, num0, numn0, colon, hmitdt, life, distance, msg, rmpanel, bmconfirm, menuext;
+            selmode, sigmode, special, stopsig, num0, numn0, colon, hmitdt, life, distance, msg, rmpanel, bmconfirm, menuext, crewnumenter;
         static Bitmap tdtbackoff, tdtbackred, tdtbackgreen;
         static Bitmap hmi2, dooropenleft, dooropenright, trainkey, traindir1, traindir2, hmi2Green, hmi2Red, hmi2Yellow;
         static Image tdtdigitsred, tdtdigitsgreen;
         //static Bitmap tdtdigitsred, tdtdigitsgreen;
-        static System.Drawing.Font drawFont, timeFont, distanceFont, hmi2Font;
+        static System.Drawing.Font drawFont, timeFont, distanceFont, hmi2Font, crewNumFont;
     }
 }
