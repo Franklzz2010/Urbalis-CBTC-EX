@@ -8,6 +8,7 @@ using AtsEx.PluginHost.Plugins;
 using AtsEx.Extensions.PreTrainPatch;
 using System.IO;
 using System.Collections.Generic;
+using AtsEx.PluginHost.MapStatements;
 
 
 
@@ -21,11 +22,16 @@ namespace TGMTAts.WCU {
         public double MovementAuthority { get; set; } = 0;
         public int OBCULevel { get; set; } = 0;
         public double SelfTrainLocation { get; set; } = 0;
+        public int doorSide { get; set; } = 0;
+        public int depTime { get; set; } = 0;
+        public bool isPass { get; set; } = false;
+        public int stopPos { get; set; } = 0;
 
         private List<SignalPatch> SignalPatch = new List<SignalPatch>();
         private Train Train;
         private PreTrainPatch PreTrainPatch;
         private SectionManager sectionManager;
+        private Station Station;
 
 
         public PluginMain(PluginBuilder builder) : base(builder) {
@@ -80,6 +86,15 @@ namespace TGMTAts.WCU {
         public override TickResult Tick(TimeSpan elapsed) {
 
             MovementAuthority = Train.Location;
+
+
+            var nextSta = BveHacker.Scenario.Route.Stations[BveHacker.Scenario.Route.Stations.CurrentIndex + 1] as Station;
+            doorSide = nextSta.DoorSide;
+            depTime = nextSta.DepertureTimeMilliseconds;
+            isPass = nextSta.Pass;
+            stopPos = Convert.ToInt32(nextSta.Location);
+
+
 
             return new MapPluginTickResult();
         }

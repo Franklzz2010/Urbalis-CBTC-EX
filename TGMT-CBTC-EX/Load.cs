@@ -113,7 +113,7 @@ namespace TGMTAts.OBCU {
             return null;
         }
 
-        static void FixIncompatibleModes() {
+        public static void FixIncompatibleModes() {
             if (selectedMode == 0) signalMode = 0; // 预选了IXL
             if (selectedMode == 1 && signalMode > 1) signalMode = 1; // 预选了ITC
             if (selectedMode == 3 && signalMode > 1) signalMode = 1; // 预选了ITC

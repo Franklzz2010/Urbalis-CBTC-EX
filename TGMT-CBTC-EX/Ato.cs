@@ -30,7 +30,7 @@ namespace TGMTAts.OBCU {
             if (recAcc > 0) recAcc = 0;
 
             // 从 bve-autopilot 借来的算法
-            var staDist = StationManager.NextStation.StopPosition - TGMTAts.location;
+            var staDist = MapStationManager.NextStation.StopPosition - TGMTAts.location;
             var decelA = speed * speed / 2 / staDist;
             var decelB = -recAcc * (speed / recSpeed) - (recSpeed - speed) / 2;
 
@@ -40,9 +40,9 @@ namespace TGMTAts.OBCU {
                 decelB += 2;
             }
 
-            if (staDist < 0.6 && !StationManager.Arrived && !StationManager.NextStation.Pass) {
+            if (staDist < 0.6 && !MapStationManager.Arrived && !MapStationManager.NextStation.Pass) {
                 return 2; // 这大概停得住吧?
-            } else if (staDist < -0.3 && !StationManager.Arrived && !StationManager.NextStation.Pass) {
+            } else if (staDist < -0.3 && !MapStationManager.Arrived && !MapStationManager.NextStation.Pass) {
                 return 5; // 好像要冲标了，赶紧停车
             //} else if (staDist < 20 && !StationManager.Arrived) {
             //    return Math.Min(decelA, decelB);
@@ -95,8 +95,8 @@ namespace TGMTAts.OBCU {
                     && !TGMTAts.doorOpen && TGMTAts.driveMode == 1 && TGMTAts.selectedMode > 2
                     && TGMTAts.ebState == 0
                     // 车站范围内不能接通ATO
-                    && (StationManager.NextStation.StopPosition - TGMTAts.location > Config.StationStartDistance 
-                        || StationManager.Arrived)
+                    && (MapStationManager.NextStation.StopPosition - TGMTAts.location > Config.StationStartDistance 
+                        || MapStationManager.Arrived)
                     // 离移动授权终点太近不能接通ATO (这是现实情况吗？)
                     && (TGMTAts.movementEndpoint.Location - TGMTAts.location > 50 || TGMTAts.releaseSpeed)
                     // CTC下离前车太近不能接通ATO (这是现实情况吗？)

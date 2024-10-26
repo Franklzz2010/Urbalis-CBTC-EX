@@ -320,7 +320,7 @@ namespace TGMTAts.OBCU {
             if (TGMTAts.panel_[105] == 1)
             {
                 hHMI.Graphics.DrawString("发车时间", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), depTimeDisplayX, 20, stringC);
-                hHMI.Graphics.DrawString(TimeFormatter.MiliSecondToString(StationManager.NextStation.DepartureTime), timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), depTimeDisplayX, depTimeDisplayY, stringC);
+                hHMI.Graphics.DrawString(TimeFormatter.MiliSecondToString(MapStationManager.NextStation.DepartureTime), timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), depTimeDisplayX, depTimeDisplayY, stringC);
             }
 
             if (TGMTAts.panel_[51] == 0) hHMI.Graphics.DrawString("T" + TGMTAts.TrainNumber, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 600, 20, stringC);
@@ -328,26 +328,26 @@ namespace TGMTAts.OBCU {
             hHMI.Graphics.DrawString("终点站", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), destStationDisplayX, 20, stringC);
             hHMI.Graphics.DrawString("下一站", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), nextStationDisplayX, 20, stringC);
 
-            int nextStationDistance = StationManager.NextStation.StopPosition - Convert.ToInt32(state.Location);
+            int nextStationDistance = MapStationManager.NextStation.StopPosition - Convert.ToInt32(state.Location);
 
             double dis = Math.Round(Convert.ToDouble(nextStationDistance), 1);
             string disF = dis.ToString("0");
             bool arrived = false;
 
-            if (state.Speed == 0 && ( (Math.Abs(dis) <= Config.DoorEnableWindow) || StationManager.Stopped) )
+            if (state.Speed == 0 && ( (Math.Abs(dis) <= Config.DoorEnableWindow) || MapStationManager.Stopped) )
             {
                 arrived= true;
             }
-            else if (StationManager.Arrived && TGMTAts.panel_[106] == 0)
+            else if (MapStationManager.Arrived && TGMTAts.panel_[106] == 0)
             {
                 arrived = true;
             }
-            else if (state.Location > StationManager.NextStation.StopPosition + Config.StationEndDistance)
+            else if (state.Location > MapStationManager.NextStation.StopPosition + Config.StationEndDistance)
             {
                 arrived = true;
             }
 
-            if (nextStationDistance < 1000 && nextStationDistance >= -5 && !StationManager.NextStation.Pass && !arrived)
+            if (nextStationDistance < 1000 && nextStationDistance >= -5 && !MapStationManager.NextStation.Pass && !arrived)
             {
                 hHMI.Graphics.DrawString("距下站", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 393, 391, stringC);
                 hHMI.Graphics.DrawString(disF + "m", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 393, 416, stringC);
@@ -411,7 +411,7 @@ namespace TGMTAts.OBCU {
 
             if (TGMTAts.doorOpen)
             {
-                switch (StationManager.NextStation.DoorOpenType)
+                switch (MapStationManager.NextStation.DoorOpenType)
                 {
                     case 1:
                         hHMI2.DrawImage(dooropenleft, 121, 305); 

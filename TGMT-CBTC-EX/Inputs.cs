@@ -90,12 +90,6 @@ namespace TGMTAts.OBCU{
                 case 96810:
                     trackLimit.SetBeacon(e);
                     break;
-                case 96820:
-                case 96821:
-                case 96822:
-                case 96823:
-                    StationManager.SetBeacon(e);
-                    break;
                 case 96824:
                     TGMTAts.panel_[200] = e.Optional;
                     TGMTAts.Log("下一车站站号：" + TGMTAts.panel_[200].ToString());

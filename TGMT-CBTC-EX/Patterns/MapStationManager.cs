@@ -1,13 +1,16 @@
+﻿using BveTypes.ClassWrappers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
-
-namespace TGMTAts.OBCU {
-    public static class StationManager {
-
-        public class Station {
+namespace TGMTAts.OBCU
+{
+    public static class MapStationManager
+    {
+        public class Station
+        {
             public int StopPosition = (int)Config.LessInf;
             public int RouteOpenTime = 0;
             public int DepartureTime = 0;
@@ -27,30 +30,27 @@ namespace TGMTAts.OBCU {
 
         public static bool Arrived;
 
-        public static void SetBeacon(AtsEx.PluginHost.Native.BeaconPassedEventArgs data) {
-            switch (data.Type) {
-                case 96820:
-                    NextStation.StopPosition = Math.Abs(data.Optional);
-                    NextStation.Pass = data.Optional < 0;
-                    TGMTAts.Log("车站停车位置 " + NextStation.StopPosition.ToString());
-
+        public static void Update(AtsEx.PluginHost.Native.VehicleState state, bool doorState)
+        {
+            switch (TGMTAts.mapPlugin.doorSide)
+            {
+                case 1:
+                    NextStation.DoorOpenType = 2;
                     break;
-                case 96821:
-                    NextStation.DoorOpenType = data.Optional;
-                    break;
-                case 96822:
-                    NextStation.RouteOpenTime = TGMTAts.ConvertTime(data.Optional) * 1000;
-                    break;
-                case 96823:
-                    NextStation.DepartureTime = TGMTAts.ConvertTime(data.Optional) * 1000;
-                    break;
-                case 96824:
+                case -1:
+                    NextStation.DoorOpenType = 1;
                     break;
             }
-        }
 
-        public static void Update(AtsEx.PluginHost.Native.VehicleState state, bool doorState) {
-            if (state.Speed == 0 && state.Location > NextStation.StopPosition - Config.StationStartDistance) {
+            NextStation.RouteOpenTime = NextStation.DepartureTime = TGMTAts.mapPlugin.depTime;
+
+            NextStation.Pass = TGMTAts.mapPlugin.isPass;
+
+            NextStation.StopPosition = TGMTAts.mapPlugin.stopPos;
+
+
+            if (state.Speed == 0 && state.Location > NextStation.StopPosition - Config.StationStartDistance)
+            {
                 if (!Stopped) TGMTAts.Log("已在站内停稳");
                 if (Stopped == false)
                 {
@@ -58,38 +58,56 @@ namespace TGMTAts.OBCU {
                 }
                 Stopped = true;
             }
-            if (doorState) {
+            if (doorState)
+            {
                 if (!Arrived) TGMTAts.Log("已开门");
                 Arrived = true;
             }
-            if (state.Location > NextStation.StopPosition + Config.StationEndDistance) {
+            if (state.Location > NextStation.StopPosition + Config.StationEndDistance)
+            {
                 NextStation = new Station();
                 Stopped = false;
                 Arrived = false;
                 TGMTAts.Log("已出站");
             }
+
         }
 
-        public static SpeedLimit RecommendCurve() {
-            if (TGMTAts.signalMode > 1 && NextStation.Pass) {
+        public static SpeedLimit RecommendCurve()
+        {
+            if (TGMTAts.signalMode > 1 && NextStation.Pass)
+            {
                 return SpeedLimit.inf;
-            }else{
-                if (NextStation.StopPosition >= (int)Config.LessInf){
+            }
+            else
+            {
+                if (NextStation.StopPosition >= (int)Config.LessInf)
+                {
                     return SpeedLimit.inf;
-                }else if (Arrived){
+                }
+                else if (Arrived)
+                {
                     return SpeedLimit.inf;
-                }else if (Stopped){
+                }
+                else if (Stopped)
+                {
                     return new SpeedLimit(0, 0);
-                }else{
+                }
+                else
+                {
                     return new SpeedLimit(0, NextStation.StopPosition);
                 }
             }
         }
 
-        public static SpeedLimit CTCEndpoint() {
-            if (TGMTAts.time > NextStation.RouteOpenTime) {
+        public static SpeedLimit CTCEndpoint()
+        {
+            if (TGMTAts.time > NextStation.RouteOpenTime)
+            {
                 return SpeedLimit.inf;
-            } else {
+            }
+            else
+            {
                 return new SpeedLimit(0, NextStation.StopPosition + Config.StationMotionEndpoint);
             }
         }

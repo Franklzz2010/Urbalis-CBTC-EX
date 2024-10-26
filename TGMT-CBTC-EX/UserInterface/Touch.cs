@@ -23,6 +23,7 @@ namespace TGMTAts.OBCU.UserInterface
                     if (e.X >= 586 && e.X <= 661)
                     {
                         if (TGMTAts.panel_[50] == 1) TGMTAts.selectedMode = 3;
+                        TGMTAts.FixIncompatibleModes();
                         TGMTAts.panel_[50] = 0;
                     }
                     else if (e.X >= 682 && e.X <= 758)
