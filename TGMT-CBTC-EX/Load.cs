@@ -145,14 +145,12 @@ namespace TGMTAts.OBCU {
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.A1].Pressed -= OnA1Pressed;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.B1].Pressed -= OnB1Pressed;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.B2].Pressed -= OnB2Pressed;
-            Native.NativeKeys.AtsKeys[NativeAtsKeyName.C1].Pressed -= OnC1Pressed;
-            Native.NativeKeys.AtsKeys[NativeAtsKeyName.C2].Pressed -= OnC2Pressed;
-            Native.NativeKeys.AtsKeys[NativeAtsKeyName.I].Pressed -= OnIPressed;
-            Native.NativeKeys.AtsKeys[NativeAtsKeyName.J].Pressed -= OnJPressed;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.K].Pressed -= OnKPressed;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.L].Pressed -= OnLPressed;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.A1].Released -= OnA1Up;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.B1].Released -= OnB1Up;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.K].Released -= OnKUp;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.L].Released -= OnLUp;
 
             Native.BeaconPassed -= SetBeaconData;
             Native.DoorClosed -= DoorClose;
@@ -191,9 +189,18 @@ namespace TGMTAts.OBCU {
                 }
             }
 
+            //菜单展开
+            if (e.X >= 456 && e.X <= 604 && e.Y >= 522 && e.Y <= 567 && TGMTAts.panel_[23] == 0 && TGMTAts.panel_[51] == 0)
+            {
+                TGMTAts.panel_[51] = 1;
+            }
+            //菜单收起
+            else if (e.X >= 498 && e.X <= 776 && e.Y >= 522 && e.Y <= 567 && TGMTAts.panel_[51] == 1)
+            {
+                TGMTAts.panel_[51] = 0;
+            }
 
-        
+
         }
-
     }
 }
