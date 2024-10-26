@@ -53,11 +53,15 @@ namespace TGMTAts.OBCU {
             distance = new Bitmap(Path.Combine(imgDir, "distance.png"));
             msg = new Bitmap(Path.Combine(imgDir, "msg_history.png"));
             rmpanel = new Bitmap(Path.Combine(imgDir, "rmpanel.png"));
+            bmconfirm = new Bitmap(Path.Combine(imgDir, "bmconfirm.png"));
+            menuext = new Bitmap(Path.Combine(imgDir, "menuext.png"));
+            crewnumenter = new Bitmap(Path.Combine(imgDir, "crewnumenter.png"));
 
             drawFont = new System.Drawing.Font("思源黑体 CN Bold", 30);
             timeFont = new System.Drawing.Font("思源黑体 CN Bold", 15);
             distanceFont = new System.Drawing.Font("思源黑体 CN Bold", 16);
             hmi2Font = new System.Drawing.Font("思源黑体 CN Bold", 10);
+            crewNumFont = new System.Drawing.Font("思源黑体 CN Bold", 15);
 
             num0 = new Bitmap(Path.Combine(imgDir, "num0.png"));
             numn0 = new Bitmap(Path.Combine(imgDir, "num-0.png"));
@@ -120,14 +124,14 @@ namespace TGMTAts.OBCU {
 
             if (TGMTAts.selectingMode == -1 && TGMTAts.ackMessage == 0)
             {
-                hHMI.DrawImage(msg, 115, 480, TGMTAts.msgContext1 * 18, 18);
-                hHMI.DrawImage(msg, 115, 501, TGMTAts.msgContext2 * 18, 18);
-                hHMI.DrawImage(msg, 115, 522, TGMTAts.msgContext3 * 18, 18);
+                hHMI.DrawImage(msg, 115, 480, TGMTAts.msg1.MsgID * 18, 18);
+                hHMI.DrawImage(msg, 115, 501, TGMTAts.msg2.MsgID * 18, 18);
+                hHMI.DrawImage(msg, 115, 522, TGMTAts.msg3.MsgID * 18, 18);
             }
             
 
 
-            hHMI.DrawImage(menu, 551, 520, TGMTAts.panel_[23] * 64, 64);
+            hHMI.DrawImage(menu, 455, 520, TGMTAts.panel_[23] * 64, 64);
             hHMI.DrawImage(drvmode, 530, 133, TGMTAts.panel_[24] * 64, 64);
             hHMI.DrawImage(sigmode, 655, 133, TGMTAts.panel_[25] * 64, 64);
             hHMI.DrawImage(stopsig, 670, 200, TGMTAts.panel_[26] * 64, 64);
@@ -156,18 +160,31 @@ namespace TGMTAts.OBCU {
             hHMI.DrawImage(num0, 289, 212, D((int)Math.Abs(Math.Ceiling(state.Speed)), 0) * 18, 18);
             hHMI.DrawImage(numn0, 275, 212, D((int)Math.Abs(Math.Ceiling(state.Speed)), 1) * 18, 18);
 
+            if (TGMTAts.panel_[50] == 1) hHMI.DrawImage(bmconfirm, 555, 400);
+
+            if (TGMTAts.panel_[61] == 1) hHMI.DrawImage(crewnumenter, 525, 108);
+
+            if (TGMTAts.panel_[51] == 1) hHMI.DrawImage(menuext, 479, 9);
 
             hHMI.EndGDI();
 
             var stringC = new StringFormat();
             stringC.Alignment = StringAlignment.Center;
 
+            //司机号
+            if (TGMTAts.panel_[51] == 0)
+            {
+                hHMI.Graphics.DrawString(Convert.ToString(TGMTAts.panel_[63]).PadLeft(3, '0'), crewNumFont, new SolidBrush(Color.FromArgb(0, 0, 0)), 704, 30);
+                if (TGMTAts.panel_[61] == 1 && TGMTAts.panel_[62] != 0) hHMI.Graphics.DrawString(HMITouch.crewNumberPreEnterStr, drawFont, new SolidBrush(Color.FromArgb(0, 0, 0)), 653, 171, stringC);
+
+            }   
+
 
             if (TGMTAts.selectingMode == -1 && TGMTAts.ackMessage == 0)
             {
-                hHMI.Graphics.DrawString(TGMTAts.msgTime1, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 83, 479, stringC);
-                hHMI.Graphics.DrawString(TGMTAts.msgTime2, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 83, 499, stringC);
-                hHMI.Graphics.DrawString(TGMTAts.msgTime3, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 83, 519, stringC);
+                hHMI.Graphics.DrawString(TGMTAts.msg1.MsgTime, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 83, 479, stringC);
+                hHMI.Graphics.DrawString(TGMTAts.msg2.MsgTime, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 83, 499, stringC);
+                hHMI.Graphics.DrawString(TGMTAts.msg3.MsgTime, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 83, 519, stringC);
             }
 
             hHMI.Graphics.FillRectangle(overspeed[TGMTAts.panel_[10]], new Rectangle(20, 18, 80, 78));
@@ -233,7 +250,7 @@ namespace TGMTAts.OBCU {
             }
 
             //HMI上TDT显示的数字
-            if (TGMTAts.panel_[105] == 1)
+            if (TGMTAts.panel_[105] == 1 && TGMTAts.panel_[51] == 0)
             {
                 hHMI.Graphics.DrawString(Convert.ToString(Math.Abs(TGMTAts.panel_[106])), drawFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 715, 82, stringC);
             }
@@ -286,7 +303,7 @@ namespace TGMTAts.OBCU {
 
 
 
-            int depTimeDisplayX = 450;
+            int depTimeDisplayX = 430;
             int depTimeDisplayY = 45;
             int destStationDisplayX = 250;
             int destStationDisplayY = 45;
@@ -303,34 +320,34 @@ namespace TGMTAts.OBCU {
             if (TGMTAts.panel_[105] == 1)
             {
                 hHMI.Graphics.DrawString("发车时间", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), depTimeDisplayX, 20, stringC);
-                hHMI.Graphics.DrawString(TimeFormatter.MiliSecondToString(StationManager.NextStation.DepartureTime), timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), depTimeDisplayX, depTimeDisplayY, stringC);
+                hHMI.Graphics.DrawString(TimeFormatter.MiliSecondToString(MapStationManager.NextStation.DepartureTime), timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), depTimeDisplayX, depTimeDisplayY, stringC);
             }
 
-            hHMI.Graphics.DrawString("T" + TGMTAts.TrainNumber, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 600, 20, stringC);
+            if (TGMTAts.panel_[51] == 0) hHMI.Graphics.DrawString("T" + TGMTAts.TrainNumber, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 600, 20, stringC);
 
             hHMI.Graphics.DrawString("终点站", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), destStationDisplayX, 20, stringC);
             hHMI.Graphics.DrawString("下一站", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), nextStationDisplayX, 20, stringC);
 
-            int nextStationDistance = StationManager.NextStation.StopPosition - Convert.ToInt32(state.Location);
+            int nextStationDistance = MapStationManager.NextStation.StopPosition - Convert.ToInt32(state.Location);
 
             double dis = Math.Round(Convert.ToDouble(nextStationDistance), 1);
             string disF = dis.ToString("0");
             bool arrived = false;
 
-            if (state.Speed == 0 && ( (Math.Abs(dis) <= Config.DoorEnableWindow) || StationManager.Stopped) )
+            if (state.Speed == 0 && ( (Math.Abs(dis) <= Config.DoorEnableWindow) || MapStationManager.Stopped) )
             {
                 arrived= true;
             }
-            else if (StationManager.Arrived && TGMTAts.panel_[106] == 0)
+            else if (MapStationManager.Arrived && TGMTAts.panel_[106] == 0)
             {
                 arrived = true;
             }
-            else if (state.Location > StationManager.NextStation.StopPosition + Config.StationEndDistance)
+            else if (state.Location > MapStationManager.NextStation.StopPosition + Config.StationEndDistance)
             {
                 arrived = true;
             }
 
-            if (nextStationDistance < 1000 && nextStationDistance >= -5 && !StationManager.NextStation.Pass && !arrived)
+            if (nextStationDistance < 1000 && nextStationDistance >= -5 && !MapStationManager.NextStation.Pass && !arrived)
             {
                 hHMI.Graphics.DrawString("距下站", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 393, 391, stringC);
                 hHMI.Graphics.DrawString(disF + "m", timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 393, 416, stringC);
@@ -394,7 +411,7 @@ namespace TGMTAts.OBCU {
 
             if (TGMTAts.doorOpen)
             {
-                switch (StationManager.NextStation.DoorOpenType)
+                switch (MapStationManager.NextStation.DoorOpenType)
                 {
                     case 1:
                         hHMI2.DrawImage(dooropenleft, 121, 305); 
@@ -765,11 +782,11 @@ namespace TGMTAts.OBCU {
         static Brush[] targetColor = new Brush[] { new SolidBrush(Color.Red), new SolidBrush(Color.Orange), new SolidBrush(Color.Green) };
         static Brush[] overspeed = new Brush[] { new SolidBrush(Color.Empty), new SolidBrush(Color.Orange), new SolidBrush(Color.Red) };
         static Bitmap hmi, ackcmd, atoctrl, dormode, dorrel, drvmode, emergency, fault, departure, menu,
-            selmode, sigmode, special, stopsig, num0, numn0, colon, hmitdt, life, distance, msg, rmpanel;
+            selmode, sigmode, special, stopsig, num0, numn0, colon, hmitdt, life, distance, msg, rmpanel, bmconfirm, menuext, crewnumenter;
         static Bitmap tdtbackoff, tdtbackred, tdtbackgreen;
         static Bitmap hmi2, dooropenleft, dooropenright, trainkey, traindir1, traindir2, hmi2Green, hmi2Red, hmi2Yellow;
         static Image tdtdigitsred, tdtdigitsgreen;
         //static Bitmap tdtdigitsred, tdtdigitsgreen;
-        static System.Drawing.Font drawFont, timeFont, distanceFont, hmi2Font;
+        static System.Drawing.Font drawFont, timeFont, distanceFont, hmi2Font, crewNumFont;
     }
 }

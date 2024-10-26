@@ -27,7 +27,8 @@ namespace TGMTAts.OBCU {
 
         public static List<string> debugMessages = new List<string>();
 
-        // 0: RM; 1: CM-ITC; 2: CM-CBTC; 3: AM-ITC; 4: AM-CBTC; 5: XAM
+        //Urbalis只有AM-BM和AM-CBTC两个预选模式
+        // 0: RM; 1: CM-ITC; 2: CM-CBTC; 3: AM-BM; 4: AM-CBTC; 5: XAM
         public static int selectedMode = 4;
         // 0: RM; 1: CM; 2: AM; 3: XAM
         public static int driveMode = 1;
@@ -44,9 +45,6 @@ namespace TGMTAts.OBCU {
 
         //首次启动需将HMI上msg显示的时间校准
         public static bool initTimeMode = true;
-
-        public static string msgTime1, msgTime2, msgTime3;
-        public static int msgContext1 = 1, msgContext2 = 13, msgContext3 = 12;
 
         public static int ebState = 0;
         public static bool releaseSpeed = false;
@@ -70,12 +68,12 @@ namespace TGMTAts.OBCU {
         public static HarmonyLib.Harmony harmony;
 
         public static TextureHandle hTDTTex;
-        public static TextureHandle hHMITex;
+        public static TouchTextureHandle hHMITex;
         public static TextureHandle hHMI2Tex;
 
-        public Msg msg1 = new Msg();
-        public Msg msg2 = new Msg();
-        public Msg msg3 = new Msg();
+        public static Msg msg1 = new Msg();
+        public static Msg msg2 = new Msg();
+        public static Msg msg3 = new Msg();
 
         static TGMTAts() {
             Config.Load(Path.Combine(Config.PluginDir, "TGMTConfig.txt"));
@@ -94,7 +92,10 @@ namespace TGMTAts.OBCU {
             try {
                 //TextureManager.Initialize();
                 TGMTPainter.Initialize();
-                hHMITex = TextureManager.Register(Config.HMIImageSuffix, 1024, 1024);
+                hHMITex = TouchManager.Register(Config.HMIImageSuffix, 1024, 1024);
+                TouchManager.EnableEvent(MouseButtons.Left, TouchManager.EventType.Down);
+                hHMITex.SetClickableArea(0, 0, 800, 600);
+                hHMITex.MouseDown += HMITouch.OnHMITexMouseDown;
                 hTDTTex = TextureManager.Register(Config.TDTImageSuffix, 256, 256);
                 hHMI2Tex = TextureManager.Register(Config.HMI2ImageSuffix, 1024, 1024);
             } catch (Exception ex) {
@@ -112,7 +113,7 @@ namespace TGMTAts.OBCU {
             return null;
         }
 
-        static void FixIncompatibleModes() {
+        public static void FixIncompatibleModes() {
             if (selectedMode == 0) signalMode = 0; // 预选了IXL
             if (selectedMode == 1 && signalMode > 1) signalMode = 1; // 预选了ITC
             if (selectedMode == 3 && signalMode > 1) signalMode = 1; // 预选了ITC
@@ -144,10 +145,12 @@ namespace TGMTAts.OBCU {
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.A1].Pressed -= OnA1Pressed;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.B1].Pressed -= OnB1Pressed;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.B2].Pressed -= OnB2Pressed;
-            Native.NativeKeys.AtsKeys[NativeAtsKeyName.C1].Pressed -= OnC1Pressed;
-            Native.NativeKeys.AtsKeys[NativeAtsKeyName.C2].Pressed -= OnC2Pressed;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.K].Pressed -= OnKPressed;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.L].Pressed -= OnLPressed;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.A1].Released -= OnA1Up;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.B1].Released -= OnB1Up;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.K].Released -= OnKUp;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.L].Released -= OnLUp;
 
             Native.BeaconPassed -= SetBeaconData;
             Native.DoorClosed -= DoorClose;

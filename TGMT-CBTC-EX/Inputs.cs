@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using AtsEx.PluginHost.Plugins;
+using SlimDX.XInput;
 
 namespace TGMTAts.OBCU{
     public partial class TGMTAts : AssemblyPluginBase {
@@ -30,19 +31,6 @@ namespace TGMTAts.OBCU{
                     if (!releaseSpeed) Log("释放速度");
                     releaseSpeed = true;
                     break;
-                case 4:
-                    // 确认预选模式
-                    var lastSigMode = signalMode;
-                    selectedMode = selectingMode;
-                    selectModeStartTime = 0;
-                    FixIncompatibleModes();
-                    if (signalMode < lastSigMode) {
-                        // CTC->ITC 降级到RM
-                        // 有说实际运行中这么操作不会到RM的，不过移动授权终点不知道好没好？
-                        signalMode = 0;
-                        FixIncompatibleModes();
-                    }
-                    break;
                 case 6:
                     // 切换到RM
                     ebState = 0;
@@ -51,23 +39,32 @@ namespace TGMTAts.OBCU{
                     break;
             }
         }
-        private void OnC1Pressed(object sender, EventArgs e) {
-            // PageUp 模式升级
-            if (selectingMode == -1) selectingMode = selectedMode;
-            // TODO: XAM还没做
-            selectingMode = Math.Min(4, Math.Max(0, selectingMode + 1));
-            selectModeStartTime = time;
-        }
-        private void OnC2Pressed(object sender, EventArgs e) {
-            // PageDown 模式降级
-            if (selectingMode == -1) selectingMode = selectedMode;
-            // TODO: XAM还没做
-            selectingMode = Math.Min(4, Math.Max(0, selectingMode - 1));
+        private void OnLPressed(object sender, EventArgs e) 
+        {
             selectModeStartTime = time;
         }
 
+        private void OnKPressed(object sender, EventArgs e)
+        {
+            selectModeStartTime = time;
+        }
         private void OnA1Up(object sender, EventArgs e) => a1Down = false;
         private void OnB1Up(object sender, EventArgs e) => b1Down = false;
+        private void OnKUp(object sender, EventArgs e)
+        {
+            if (time - selectModeStartTime > 1000)
+            {
+                TGMTAts.panel_[50] = 1;
+            }
+        }
+        private void OnLUp(object sender, EventArgs e)
+        {
+            if (time - selectModeStartTime > 1000)
+            {
+                signalMode = 0;
+                FixIncompatibleModes();
+            }
+        }
 
         private void SetBeaconData(AtsEx.PluginHost.Native.BeaconPassedEventArgs e) {
             switch (e.Type) {
@@ -92,12 +89,6 @@ namespace TGMTAts.OBCU{
                     break;
                 case 96810:
                     trackLimit.SetBeacon(e);
-                    break;
-                case 96820:
-                case 96821:
-                case 96822:
-                case 96823:
-                    StationManager.SetBeacon(e);
                     break;
                 case 96824:
                     TGMTAts.panel_[200] = e.Optional;

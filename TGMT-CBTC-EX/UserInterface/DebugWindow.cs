@@ -31,9 +31,9 @@ namespace TGMTAts.OBCU {
             var pretrain = PreTrainManager.GetEndpoint();
             sb.AppendFormat("前车信息 : {0,6} {1,-4}\n", D(pretrain.Location), D(pretrain.Limit));
             sb.AppendFormat("车站     : {0,6} {1} {2}\n",
-                D(StationManager.NextStation.StopPosition), 
-                StationManager.Arrived ? "站内停止" : "",
-                StationManager.Arrived ? "已到达" : ""
+                D(MapStationManager.NextStation.StopPosition),
+                MapStationManager.Arrived ? "站内停止" : "",
+                MapStationManager.Arrived ? "已到达" : ""
             );
             sb.AppendFormat("线路限速 : {0,6} {1,-4} -> [{2,6} {3,-4}] -> {4,6} {5,-4}\n",
                 D(TGMTAts.trackLimit.last.Location), D(TGMTAts.trackLimit.last.Limit),

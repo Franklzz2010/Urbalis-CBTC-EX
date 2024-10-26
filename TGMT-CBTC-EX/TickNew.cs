@@ -14,8 +14,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
-
 using MapPlugin = TGMTAts.WCU.PluginMain;
 
 namespace TGMTAts.OBCU {
@@ -46,10 +44,12 @@ namespace TGMTAts.OBCU {
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.A1].Pressed += OnA1Pressed;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.B1].Pressed += OnB1Pressed;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.B2].Pressed += OnB2Pressed;
-            Native.NativeKeys.AtsKeys[NativeAtsKeyName.C1].Pressed += OnC1Pressed;
-            Native.NativeKeys.AtsKeys[NativeAtsKeyName.C2].Pressed += OnC2Pressed;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.K].Pressed += OnKPressed;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.L].Pressed += OnLPressed;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.A1].Released += OnA1Up;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.B1].Released += OnB1Up;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.K].Released += OnKUp;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.L].Released += OnLUp;
 
             Native.BeaconPassed += SetBeaconData;
             Native.DoorClosed += DoorClose;
@@ -68,18 +68,14 @@ namespace TGMTAts.OBCU {
         public override TickResult Tick(TimeSpan elapsed) {
             var state = Native.VehicleState;
 
+
             if (TGMTAts.initTimeMode == true)
-            {
+            { 
+                msg1.MsgTime = msg2.MsgTime = msg3.MsgTime = TimeFormatter.MiliSecondToShortString(state.Time.TotalMilliseconds);
 
-                msgTime1 = TimeFormatter.MiliSecondToShortString(state.Time.TotalMilliseconds);
-                msgTime2 = TimeFormatter.MiliSecondToShortString(state.Time.TotalMilliseconds);
-                msgTime3 = TimeFormatter.MiliSecondToShortString(state.Time.TotalMilliseconds);
-
-                /*
-                msg1.MsgTime = hourS + ":" + minuteS;
-                msg2.MsgTime = hourS + ":" + minuteS;
-                msg3.MsgTime = hourS + ":" + minuteS;
-                */
+                msg1.MsgID = 1;
+                msg2.MsgID = 13;
+                msg3.MsgID = 12;
 
                 TGMTAts.initTimeMode = false;
             }
@@ -104,18 +100,18 @@ namespace TGMTAts.OBCU {
 
             double ebSpeed = 0, recommendSpeed = 0, targetSpeed = 0, targetDistance = 0;
             trackLimit.Update(location);
-            StationManager.Update(state, doorOpen);
+            MapStationManager.Update(state, doorOpen);
 
             //释放速度抑制计算
 
             //未进站
-            if (TGMTAts.movementEndpoint.Location > StationManager.NextStation.StopPosition
-                && !StationManager.Arrived && state.Location < StationManager.NextStation.StopPosition + Config.StationEndDistance
-                && !StationManager.NextStation.Pass)
+            if (TGMTAts.movementEndpoint.Location > MapStationManager.NextStation.StopPosition
+                && !MapStationManager.Arrived && state.Location < MapStationManager.NextStation.StopPosition + Config.StationEndDistance
+                && !MapStationManager.NextStation.Pass)
             {
                 releaseSpeedInop = true;
             }
-            else if (StationManager.Arrived && doorOpen) //停站开门中
+            else if (MapStationManager.Arrived && doorOpen) //停站开门中
             {
                 releaseSpeedInop = true;
             }
@@ -142,7 +138,7 @@ namespace TGMTAts.OBCU {
                     targetCurve = CalculatedLimit.Calculate(location,
                         Config.EbPatternDeceleration, 0, movementEndpoint, trackLimit);
                     recommendCurve = CalculatedLimit.Calculate(location,
-                        Config.RecommendDeceleration, 0, StationManager.RecommendCurve(), movementEndpoint, trackLimit);
+                        Config.RecommendDeceleration, 0, MapStationManager.RecommendCurve(), movementEndpoint, trackLimit);
                     // 释放速度
                     if (movementEndpoint.Location - location < Config.ReleaseSpeedDistance
                         && movementEndpoint.Location > location
@@ -155,7 +151,7 @@ namespace TGMTAts.OBCU {
                 case 2:
                     // CTC
                     releaseSpeed = false;
-                    movementEndpoint = StationManager.CTCEndpoint();
+                    movementEndpoint = MapStationManager.CTCEndpoint();
                     if (selectedMode > 0 && driveMode == 0) driveMode = 1;
                     maximumCurve = CalculatedLimit.Calculate(location,
                         Config.EbPatternDeceleration, Config.RecommendSpeedOffset, movementEndpoint,
@@ -164,7 +160,7 @@ namespace TGMTAts.OBCU {
                         Config.EbPatternDeceleration, 0, movementEndpoint,
                         PreTrainManager.GetEndpoint(), trackLimit);
                     recommendCurve = CalculatedLimit.Calculate(location,
-                        Config.RecommendDeceleration, 0, StationManager.RecommendCurve(),
+                        Config.RecommendDeceleration, 0, MapStationManager.RecommendCurve(),
                         PreTrainManager.GetEndpoint(), movementEndpoint, trackLimit);
                     break;
                 default:
@@ -266,7 +262,7 @@ namespace TGMTAts.OBCU {
                 } else {
                     if (time - doorCloseTime >= 1000) {
                         panel_[29] = 0;
-                    } else if(StationManager.Arrived) {
+                    } else if(MapStationManager.Arrived) {
                         panel_[29] = 3;
                         targetDistance = 0;
                         targetSpeed = -10;
@@ -279,8 +275,8 @@ namespace TGMTAts.OBCU {
 
             // 显示目标速度、建议速度、干预速度
             if (signalMode > 1 && state.Speed == 0 &&
-                Math.Abs(StationManager.NextStation.StopPosition - location) < Config.DoorEnableWindow
-                && time < StationManager.NextStation.RouteOpenTime) {
+                Math.Abs(MapStationManager.NextStation.StopPosition - location) < Config.DoorEnableWindow
+                && time < MapStationManager.NextStation.RouteOpenTime) {
                 targetDistance = 0;
                 targetSpeed = -10;
                 ebSpeed = recommendSpeed = 0;
@@ -308,18 +304,18 @@ namespace TGMTAts.OBCU {
 
             // 显示出发信息
             if (signalMode > 1 && state.Speed == 0) {
-                if (Math.Abs(StationManager.NextStation.StopPosition - location) < Config.DoorEnableWindow
-                    && time > StationManager.NextStation.DepartureTime - Config.DepartRequestTime * 1000 && !doorOpen && StationManager.Arrived
-                    && time >= StationManager.NextStation.RouteOpenTime && panel_[29] != 3) {
+                if (Math.Abs(MapStationManager.NextStation.StopPosition - location) < Config.DoorEnableWindow
+                    && time > MapStationManager.NextStation.DepartureTime - Config.DepartRequestTime * 1000 && !doorOpen && MapStationManager.Arrived
+                    && time >= MapStationManager.NextStation.RouteOpenTime && panel_[29] != 3) {
                     panel_[32] = 2;
                     atsSound1.Play();
-                } else if (Math.Abs(StationManager.NextStation.StopPosition - location) < Config.DoorEnableWindow
-                    && time - doorOpenTime >= Config.CloseRequestShowTime * 1000 && doorOpen && time > StationManager.NextStation.DepartureTime - (Config.DepartRequestTime + 20) * 1000
-                    && StationManager.Arrived && time >= StationManager.NextStation.RouteOpenTime) {
+                } else if (Math.Abs(MapStationManager.NextStation.StopPosition - location) < Config.DoorEnableWindow
+                    && time - doorOpenTime >= Config.CloseRequestShowTime * 1000 && doorOpen && time > MapStationManager.NextStation.DepartureTime - (Config.DepartRequestTime + 20) * 1000
+                    && MapStationManager.Arrived && time >= MapStationManager.NextStation.RouteOpenTime) {
                     panel_[32] = 1;
                     atsSound1.Play();
-                } else if (Math.Abs(StationManager.NextStation.StopPosition - location) < Config.DoorEnableWindow
-                    && time < StationManager.NextStation.RouteOpenTime) {
+                } else if (Math.Abs(MapStationManager.NextStation.StopPosition - location) < Config.DoorEnableWindow
+                    && time < MapStationManager.NextStation.RouteOpenTime) {
                     panel_[32] = 4;
                 } else {
                     panel_[32] = 0;
@@ -520,8 +516,8 @@ namespace TGMTAts.OBCU {
             }
 
             // 显示TDT、车门使能，车门零速保护
-            if (StationManager.NextStation != null) {
-                int depTime = Convert.ToInt32(TimeFormatter.MiliSecondToInt(state.Time.TotalMilliseconds) - TimeFormatter.MiliSecondToInt(StationManager.NextStation.DepartureTime));
+            if (MapStationManager.NextStation != null) {
+                int depTime = Convert.ToInt32(TimeFormatter.MiliSecondToInt(state.Time.TotalMilliseconds) - TimeFormatter.MiliSecondToInt(MapStationManager.NextStation.DepartureTime));
                 //int stopTime = Convert.ToInt32((state.Time.TotalMilliseconds / 1000) - (TGMTAts.panel_[201] + TGMTAts.panel_[202]));
                 //int timeToDep = Math.Min(depTime, stopTime);
                 if (depTime <= 0) {
@@ -531,9 +527,9 @@ namespace TGMTAts.OBCU {
                 {
                     TGMTAts.panel_[106] = 0;
                 }
-                if (StationManager.Arrived) {
+                if (MapStationManager.Arrived) {
                     // 已停稳，可开始显示TDT
-                    if (location - StationManager.NextStation.StopPosition < Config.TDTFreezeDistance) {
+                    if (location - MapStationManager.NextStation.StopPosition < Config.TDTFreezeDistance) {
                         // 未发车
                         // 这里先要求至少100m的移动授权
                         if (movementEndpoint.Location - location > 100) {
@@ -563,10 +559,10 @@ namespace TGMTAts.OBCU {
                     panel_[102] = 0;
                     panel_[101] = 0;
                 }
-                if (StationManager.NextStation.DepartureTime < 0.1) panel_[102] = 0;
-                if (Math.Abs(StationManager.NextStation.StopPosition - location) < Config.StationStartDistance) {
+                if (MapStationManager.NextStation.DepartureTime < 0.1) panel_[102] = 0;
+                if (Math.Abs(MapStationManager.NextStation.StopPosition - location) < Config.StationStartDistance) {
                     // 在车站范围内
-                    if (Math.Abs(StationManager.NextStation.StopPosition - location) < Config.DoorEnableWindow) {
+                    if (Math.Abs(MapStationManager.NextStation.StopPosition - location) < Config.DoorEnableWindow) {
                         // 在停车窗口内
                         if (state.Speed < 1) {
                             panel_[26] = 2;
@@ -579,23 +575,23 @@ namespace TGMTAts.OBCU {
                             var flashtime = Convert.ToInt32(state.Time.TotalMilliseconds) / 500; //门没开一秒闪烁2次
                             if (flashtime % 2 == 0)
                             {
-                                if (StationManager.NextStation.DoorOpenType == 1)
+                                if (MapStationManager.NextStation.DoorOpenType == 1)
                                 {
                                     panel_[27] = 1;
                                 }
-                                else if (StationManager.NextStation.DoorOpenType == 2)
+                                else if (MapStationManager.NextStation.DoorOpenType == 2)
                                 {
                                     panel_[27] = 3;
                                 }
-                                else if (StationManager.NextStation.DoorOpenType == 3)
+                                else if (MapStationManager.NextStation.DoorOpenType == 3)
                                 {
                                     panel_[27] = 7;
                                 }
-                                else if (StationManager.NextStation.DoorOpenType == 4)
+                                else if (MapStationManager.NextStation.DoorOpenType == 4)
                                 {
                                     panel_[27] = 5;
                                 }
-                                else if (StationManager.NextStation.DoorOpenType == 5)
+                                else if (MapStationManager.NextStation.DoorOpenType == 5)
                                 {
                                     panel_[27] = 9;
                                 }
@@ -604,23 +600,23 @@ namespace TGMTAts.OBCU {
                                 panel_[27] = 0;
                             }
                             if (doorOpen) {         //门开了不闪烁
-                                if (StationManager.NextStation.DoorOpenType == 1)
+                                if (MapStationManager.NextStation.DoorOpenType == 1)
                                 {
                                     panel_[27] = 1;
                                 }
-                                else if (StationManager.NextStation.DoorOpenType == 2)
+                                else if (MapStationManager.NextStation.DoorOpenType == 2)
                                 {
                                     panel_[27] = 3;
                                 }
-                                else if (StationManager.NextStation.DoorOpenType == 3)
+                                else if (MapStationManager.NextStation.DoorOpenType == 3)
                                 {
                                     panel_[27] = 7;
                                 }
-                                else if (StationManager.NextStation.DoorOpenType == 4)
+                                else if (MapStationManager.NextStation.DoorOpenType == 4)
                                 {
                                     panel_[27] = 5;
                                 }
-                                else if (StationManager.NextStation.DoorOpenType == 5)
+                                else if (MapStationManager.NextStation.DoorOpenType == 5)
                                 {
                                     panel_[27] = 9;
                                 }
@@ -646,7 +642,7 @@ namespace TGMTAts.OBCU {
                 }
             }
 
-            if (TGMTAts.signalMode > 1 && StationManager.NextStation.Pass && Math.Abs(StationManager.NextStation.StopPosition - location) < Config.StationStartDistance + 200) panel_[32] = 3;
+            if (TGMTAts.signalMode > 1 && MapStationManager.NextStation.Pass && Math.Abs(MapStationManager.NextStation.StopPosition - location) < Config.StationStartDistance + 200) panel_[32] = 3;
 
             // 信号灯
             if (signalMode >= 2) {
@@ -666,6 +662,9 @@ namespace TGMTAts.OBCU {
                     }
                 }
             }
+
+            //菜单自动收起
+            if (state.Speed != 0) TGMTAts.panel_[50] = TGMTAts.panel_[51] = TGMTAts.panel_[61] = 0;
 
             TGMTAts.panel_[108] = Convert.ToInt32(targetDistance);
 
@@ -705,6 +704,10 @@ namespace TGMTAts.OBCU {
                 }
 
             }
+
+            if (panel_[50] == 1) atsSound1.Play();
+
+            panel_[240] = mapPlugin.doorSide;
 
             return tickResult;
         }
@@ -768,29 +771,16 @@ namespace TGMTAts.OBCU {
 
         public void updateMsg(int msgnumber, AtsEx.PluginHost.Native.VehicleState state)
         {
-            /*
+            
             msg3.MsgTime= msg2.MsgTime;
             msg2.MsgTime = msg1.MsgTime;
 
             msg3.MsgID = msg2.MsgID;
             msg2.MsgID = msg1.MsgID;
-            */
-
-            msgTime3 = msgTime2;
-            msgContext3 = msgContext2;
-
-            msgTime2 = msgTime1;
-            msgContext2 = msgContext1;
-
-
-
-            msgTime1 = TimeFormatter.MiliSecondToShortString(state.Time.TotalMilliseconds);
-            msgContext1 = msgnumber;
-
-            /*
-            msg1.MsgTime = hourS + ":" + minuteS;
+            
+            msg1.MsgTime = TimeFormatter.MiliSecondToShortString(state.Time.TotalMilliseconds);
             msg1.MsgID = msgnumber;
-            */
+            
 
 
         }
