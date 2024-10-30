@@ -77,7 +77,6 @@ namespace UrbalisAts.OBCU {
         public static Msg msg2 = new Msg();
         public static Msg msg3 = new Msg();
 
-        public static Conductor conductor = new Conductor();
 
 
         static UrbalisAts() {
