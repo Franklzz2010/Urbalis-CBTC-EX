@@ -30,6 +30,8 @@ namespace UrbalisAts.OBCU
 
         public static bool Arrived;
 
+        public static double stoppedTime;
+
         public static void Update(AtsEx.PluginHost.Native.VehicleState state, bool doorState)
         {
             switch (UrbalisAts.mapPlugin.doorSide)
@@ -41,22 +43,41 @@ namespace UrbalisAts.OBCU
                     NextStation.DoorOpenType = 1;
                     break;
             }
-            
-            NextStation.RouteOpenTime = NextStation.DepartureTime = UrbalisAts.mapPlugin.depTime;
 
-            NextStation.Pass = UrbalisAts.mapPlugin.isPass;
+            if (state.Location > UrbalisAts.mapPlugin.stopPos - 1000)
+            {
+                NextStation.RouteOpenTime = NextStation.DepartureTime = UrbalisAts.mapPlugin.depTime;
 
-            NextStation.StopPosition = UrbalisAts.mapPlugin.stopPos;
+                NextStation.Pass = UrbalisAts.mapPlugin.isPass;
+
+                NextStation.StopPosition = UrbalisAts.mapPlugin.stopPos;
+
+            }
+
 
 
             if (state.Speed == 0 && state.Location > NextStation.StopPosition - Config.StationStartDistance)
             {
-                if (!Stopped) UrbalisAts.Log("已在站内停稳");
-                if (Stopped == false)
+                if (!Stopped)
                 {
+                    UrbalisAts.Log("已在站内停稳");
                     UrbalisAts.panel_[202] = TimeFormatter.MiliSecondToInt(state.Time.TotalMilliseconds);
+                    stoppedTime = state.Time.TotalMilliseconds;
                 }
                 Stopped = true;
+                if (UrbalisAts.doorMode >= 2 && !Arrived && state.Time.TotalMilliseconds - stoppedTime > 1000)
+                {
+                    switch (NextStation.DoorOpenType)
+                    {
+                        case 1:
+                            UrbalisAts.Conductor.OpenDoors(DoorSide.Left);
+                            break;
+                        case 2:
+                            UrbalisAts.Conductor.OpenDoors(DoorSide.Right);
+                            break;
+                    }
+
+                }
             }
             if (doorState)
             {

@@ -77,7 +77,10 @@ namespace UrbalisAts.OBCU {
         public static Msg msg2 = new Msg();
         public static Msg msg3 = new Msg();
 
+        public static ConductorManager Conductor = null;
+        public static ConductorPatch Patch = null;
 
+        public static bool isDoorClosed = false;
 
         static UrbalisAts() {
             Config.Load(Path.Combine(Config.PluginDir, "TGMTConfig.txt"));
@@ -146,15 +149,37 @@ namespace UrbalisAts.OBCU {
             hTDTTex.Dispose();
             hHMI2Tex.Dispose();
 
+            if (!(Patch is null))
+            {
+                IConductorPatchFactory conductorPatchFactory = Extensions.GetExtension<IConductorPatchFactory>();
+                conductorPatchFactory.Unpatch(Patch);
+            }
+
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.A1].Pressed -= OnA1Pressed;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.B1].Pressed -= OnB1Pressed;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.B2].Pressed -= OnB2Pressed;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.K].Pressed -= OnKPressed;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.L].Pressed -= OnLPressed;
+
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.D].Pressed -= OnDPressed;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.E].Pressed -= OnEPressed;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.F].Pressed -= OnFPressed;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.G].Pressed -= OnGPressed;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.H].Pressed -= OnHPressed;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.I].Pressed -= OnIPressed;
+
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.A1].Released -= OnA1Up;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.B1].Released -= OnB1Up;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.K].Released -= OnKUp;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.L].Released -= OnLUp;
+
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.D].Released -= OnDUp;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.F].Released -= OnFUp;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.G].Released -= OnGUp;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.I].Released -= OnIUp;
+
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.C1].Pressed -= OnC1Pressed;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.C2].Pressed -= OnC2Pressed;
 
             Native.BeaconPassed -= SetBeaconData;
             Native.DoorClosed -= DoorClose;
@@ -162,6 +187,9 @@ namespace UrbalisAts.OBCU {
             Native.Started -= Initialize;
 
             Plugins.AllPluginsLoaded -= OnAllPluginsLoaded;
+
+            BveHacker.ScenarioCreated -= OnScenarioCreated;
+
             //TextureManager.Dispose();
         }
 

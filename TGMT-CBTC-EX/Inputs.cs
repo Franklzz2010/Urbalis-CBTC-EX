@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using AtsEx.PluginHost.Plugins;
+using BveTypes.ClassWrappers;
 using SlimDX.XInput;
 
 namespace UrbalisAts.OBCU{
     public partial class UrbalisAts : AssemblyPluginBase {
 
-        private static bool a1Down, b1Down;
+        private static bool a1Down, b1Down, doorL1, doorL2, doorR1, doorR2;
 
         private void OnA1Pressed(object sender, EventArgs e) {
             a1Down = true;
@@ -48,8 +49,57 @@ namespace UrbalisAts.OBCU{
         {
             selectModeStartTime = time;
         }
+
+        private void OnDPressed(object sender, EventArgs e) 
+        {
+            doorL1 = true;
+            if (doorL1 && doorL2 && doorMode == 1) Conductor.OpenDoors(DoorSide.Left);
+        }
+        private void OnFPressed(object sender, EventArgs e)
+        {
+            doorL2 = true;
+            if (doorL1 && doorL2 && doorMode == 1) Conductor.OpenDoors(DoorSide.Left);
+        }
+
+
+        private void OnGPressed(object sender, EventArgs e)
+        {
+            doorR1 = true;
+            if (doorR1 && doorR2 && doorMode == 1) Conductor.OpenDoors(DoorSide.Right);
+        }
+        private void OnIPressed(object sender, EventArgs e)
+        {
+            doorR2 = true;
+            if (doorR1 && doorR2 && doorMode == 1) Conductor.OpenDoors(DoorSide.Right);
+        }
+
+        private void OnEPressed(object sender, EventArgs e)
+        {
+            if (doorMode <= 2) Conductor.CloseDoors(DoorSide.Left);
+        }
+        private void OnHPressed(object sender, EventArgs e)
+        {
+            if (doorMode <= 2) Conductor.CloseDoors(DoorSide.Right);
+        }
+
+        private void OnC1Pressed(object sender, EventArgs e)
+        {
+            if (doorMode < 3) doorMode++;
+        }
+        private void OnC2Pressed(object sender, EventArgs e)
+        {
+            if (doorMode > 1) doorMode--;
+        }
+
         private void OnA1Up(object sender, EventArgs e) => a1Down = false;
         private void OnB1Up(object sender, EventArgs e) => b1Down = false;
+
+        private void OnDUp(object sender, EventArgs e) => doorL1 = false;
+        private void OnFUp(object sender, EventArgs e) => doorL2 = false;
+
+        private void OnGUp(object sender, EventArgs e) => doorR1 = false;
+        private void OnIUp(object sender, EventArgs e) => doorR2 = false;
+
         private void OnKUp(object sender, EventArgs e)
         {
             if (time - selectModeStartTime > 1000)

@@ -1,4 +1,5 @@
-﻿using AtsEx.PluginHost;
+﻿using AtsEx.Extensions.ConductorPatch;
+using AtsEx.PluginHost;
 using AtsEx.PluginHost.Handles;
 using AtsEx.PluginHost.Input.Native;
 using AtsEx.PluginHost.Panels.Native;
@@ -48,10 +49,26 @@ namespace UrbalisAts.OBCU {
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.B2].Pressed += OnB2Pressed;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.K].Pressed += OnKPressed;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.L].Pressed += OnLPressed;
+
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.D].Pressed += OnDPressed;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.E].Pressed += OnEPressed;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.F].Pressed += OnFPressed;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.G].Pressed += OnGPressed;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.H].Pressed += OnHPressed;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.I].Pressed += OnIPressed;
+
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.A1].Released += OnA1Up;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.B1].Released += OnB1Up;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.K].Released += OnKUp;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.L].Released += OnLUp;
+
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.D].Released += OnDUp;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.F].Released += OnFUp;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.G].Released += OnGUp;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.I].Released += OnIUp;
+
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.C1].Pressed += OnC1Pressed;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.C2].Pressed += OnC2Pressed;
 
             Native.BeaconPassed += SetBeaconData;
             Native.DoorClosed += DoorClose;
@@ -59,6 +76,8 @@ namespace UrbalisAts.OBCU {
             Native.Started += Initialize;
 
             Plugins.AllPluginsLoaded += OnAllPluginsLoaded;
+            BveHacker.ScenarioCreated += OnScenarioCreated;
+
 
             vehicleSpec = Native.VehicleSpec;
         }
@@ -66,6 +85,15 @@ namespace UrbalisAts.OBCU {
         private void OnAllPluginsLoaded(object sender, EventArgs e) {
             mapPlugin = Plugins[PluginType.MapPlugin]["TGMT_WCU_Plugin"] as MapPlugin;
             speedLimReady = false;
+        }
+
+        private void OnScenarioCreated(ScenarioCreatedEventArgs e)
+        {
+            Conductor originalConductor = e.Scenario.Vehicle.Conductor;
+
+            IConductorPatchFactory conductorPatchFactory = Extensions.GetExtension<IConductorPatchFactory>();
+            Conductor = new ConductorManager(originalConductor);
+            Patch = conductorPatchFactory.Patch(Conductor, DeclarationPriority.Sequentially);
         }
 
         public override TickResult Tick(TimeSpan elapsed) {
@@ -152,6 +180,8 @@ namespace UrbalisAts.OBCU {
                 releaseSpeedInop = false;
             }
 
+            if (MapStationManager.Arrived && !doorOpen) isDoorClosed = true; //停站关门后
+            else isDoorClosed = false;
 
             CalculatedLimit maximumCurve = null, targetCurve = null, recommendCurve = null;
             switch (signalMode) {
@@ -268,7 +298,8 @@ namespace UrbalisAts.OBCU {
             panel_[22] = selectedMode;
             panel_[24] = driveMode;
             panel_[25] = signalMode;
-            panel_[28] = (driveMode > 0) ? (driveMode > 1 ? doorMode : 1) : 0;
+            if (signalMode == 2) panel_[28] = doorMode;
+            else panel_[28] = 1;
             mapPlugin.OBCULevel = signalMode;
             mapPlugin.SelfTrainLocation = state.Location;
 
@@ -347,9 +378,26 @@ namespace UrbalisAts.OBCU {
                 } else if (Math.Abs(MapStationManager.NextStation.StopPosition - location) < Config.DoorEnableWindow
                     && time - doorOpenTime >= Config.CloseRequestShowTime * 1000 && doorOpen && time > MapStationManager.NextStation.DepartureTime - (Config.DepartRequestTime + 20) * 1000
                     && MapStationManager.Arrived && time >= MapStationManager.NextStation.RouteOpenTime) {
-                    panel_[32] = 1;
-                    atsSound1.Play();
-                } else if (Math.Abs(MapStationManager.NextStation.StopPosition - location) < Config.DoorEnableWindow
+                    if (doorMode == 3)
+                    {
+                        switch (MapStationManager.NextStation.DoorOpenType)
+                        {
+                            case 1:
+                                Conductor.CloseDoors(DoorSide.Left);
+                                break;
+                            case 2:
+                                Conductor.CloseDoors(DoorSide.Right);
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        panel_[32] = 1;
+                        atsSound1.Play();
+                    }
+
+                }
+                else if (Math.Abs(MapStationManager.NextStation.StopPosition - location) < Config.DoorEnableWindow
                     && time < MapStationManager.NextStation.RouteOpenTime) {
                     panel_[32] = 4;
                 } else {

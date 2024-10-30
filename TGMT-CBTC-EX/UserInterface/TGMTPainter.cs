@@ -106,7 +106,7 @@ namespace UrbalisAts.OBCU {
                 hHMI.DrawImage(rmpanel, 138, 73);
             }
 
-            if (UrbalisAts.panel_[102] != 0)
+            if (UrbalisAts.panel_[102] != 0 && !UrbalisAts.isDoorClosed)
             {
                 if (state.Speed == 0)
                 {
@@ -250,7 +250,7 @@ namespace UrbalisAts.OBCU {
             }
 
             //HMI上TDT显示的数字
-            if (UrbalisAts.panel_[105] == 1 && UrbalisAts.panel_[51] == 0)
+            if (UrbalisAts.panel_[105] == 1 && UrbalisAts.panel_[51] == 0 && UrbalisAts.panel_[61] == 0)
             {
                 hHMI.Graphics.DrawString(Convert.ToString(Math.Abs(UrbalisAts.panel_[106])), drawFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 715, 82, stringC);
             }
@@ -311,11 +311,8 @@ namespace UrbalisAts.OBCU {
             int nextStationDisplayY = 45;
 
 
-            FilesINI ConfigINI = new FilesINI();
-            string stationNameStr = ConfigINI.INIRead("station", Convert.ToString(UrbalisAts.nextStationNumber), INIPath);
-            hHMI.Graphics.DrawString(stationNameStr, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), nextStationDisplayX, nextStationDisplayY, stringC);
-            string destStationNameStr = ConfigINI.INIRead("station", Convert.ToString(UrbalisAts.DestinationNumber), INIPath);
-            hHMI.Graphics.DrawString(destStationNameStr, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), destStationDisplayX, destStationDisplayY, stringC);
+            hHMI.Graphics.DrawString(UrbalisAts.mapPlugin.nextStaName, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), nextStationDisplayX, nextStationDisplayY, stringC);
+            hHMI.Graphics.DrawString(UrbalisAts.mapPlugin.destStaName, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), destStationDisplayX, destStationDisplayY, stringC);
 
             if (UrbalisAts.panel_[105] == 1)
             {
@@ -681,12 +678,6 @@ namespace UrbalisAts.OBCU {
 
             hHMI2.EndGDI();
 
-            
-            FilesINI ConfigINI = new FilesINI();
-            string stationNameStr = ConfigINI.INIRead("station", Convert.ToString(UrbalisAts.nextStationNumber), INIPath);
-            string destStationNameStr = ConfigINI.INIRead("station", Convert.ToString(UrbalisAts.DestinationNumber), INIPath);
-
-
 
             double speed = Math.Round(Convert.ToDouble(state.Speed), 1);
             string speedF = speed.ToString("0.0");
@@ -713,9 +704,9 @@ namespace UrbalisAts.OBCU {
             hHMI2.Graphics.DrawString(trainmode, hmi2Font, new SolidBrush(Color.FromArgb(199, 199, 198)), 123, 96, stringC);
 
             //下一站
-            hHMI2.Graphics.DrawString(stationNameStr, hmi2Font, new SolidBrush(Color.FromArgb(199, 199, 198)), 319, 20, stringC);
+            hHMI2.Graphics.DrawString(UrbalisAts.mapPlugin.nextStaName, hmi2Font, new SolidBrush(Color.FromArgb(199, 199, 198)), 319, 20, stringC);
             //终点站
-            hHMI2.Graphics.DrawString(destStationNameStr, hmi2Font, new SolidBrush(Color.FromArgb(199, 199, 198)), 319, 58, stringC);
+            hHMI2.Graphics.DrawString(UrbalisAts.mapPlugin.destStaName, hmi2Font, new SolidBrush(Color.FromArgb(199, 199, 198)), 319, 58, stringC);
             //预选模式
             hHMI2.Graphics.DrawString(trainselmode, hmi2Font, new SolidBrush(Color.FromArgb(199, 199, 198)), 319, 96, stringC);
 

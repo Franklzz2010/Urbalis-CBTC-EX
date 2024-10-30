@@ -46,7 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ato.cs" />
-    <Compile Include="IniRead.cs" />
+    <Compile Include="Patterns\ConductorManager.cs" />
     <Compile Include="Patterns\MapStationManager.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>

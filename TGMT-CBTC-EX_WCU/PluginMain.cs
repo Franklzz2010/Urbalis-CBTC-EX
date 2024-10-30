@@ -28,6 +28,9 @@ namespace UrbalisAts.WCU {
         public int depTime { get; set; } = 0;
         public bool isPass { get; set; } = false;
         public int stopPos { get; set; } = 0;
+        public string nextStaName { get; set; } = "";
+        public string destStaName { get; set; } = "";
+
         public static List<int> speedLimitList  = new List<int>();
         public static List<int> speedLimitPosList = new List<int>();
 
@@ -98,6 +101,7 @@ namespace UrbalisAts.WCU {
 
             
             var nextSta = BveHacker.Scenario.Route.Stations[BveHacker.Scenario.Route.Stations.CurrentIndex + 1] as Station;
+            var destSta = BveHacker.Scenario.Route.Stations[BveHacker.Scenario.Route.Stations.Count - 1] as Station;
             if (nextSta.DoorSide != 0 && !nextSta.Pass || (nextSta.DoorSide == 0 && nextSta.Pass))
             {
                 doorSide = nextSta.DoorSide;
@@ -107,8 +111,9 @@ namespace UrbalisAts.WCU {
 
                 stopPos = Convert.ToInt32(nextSta.Location);
             }
-                
-
+            
+            nextStaName = nextSta.Name;
+            destStaName = destSta.Name;
 
             var trackInfo = BveHacker.Scenario.Route.SpeedLimits.Src;
 
