@@ -28,6 +28,8 @@ namespace UrbalisAts.OBCU {
         public static int pPower, pBrake;
         public static ReverserPosition pReverser;
 
+        private static bool speedLimReady;
+
         private readonly IAtsSound atsSound0, atsSound1, atsSound2;
         private readonly IAtsPanelValue<int> atsPanel36, atsPanel40, atsPanel41;
         public UrbalisAts(PluginBuilder services) : base(services) { 
@@ -63,11 +65,41 @@ namespace UrbalisAts.OBCU {
 
         private void OnAllPluginsLoaded(object sender, EventArgs e) {
             mapPlugin = Plugins[PluginType.MapPlugin]["TGMT_WCU_Plugin"] as MapPlugin;
+            speedLimReady = false;
         }
 
         public override TickResult Tick(TimeSpan elapsed) {
             var state = Native.VehicleState;
 
+            if (WCU.PluginMain.PluginReady && !speedLimReady)
+            {
+                for (int i = 0; i < WCU.PluginMain.speedLimitList.Count; i++)
+                {
+                    int speed = WCU.PluginMain.speedLimitList[i];
+                    int location = WCU.PluginMain.speedLimitPosList[i];
+
+                    if (i == 0)
+                    {
+                        trackLimit.trackLimits.Add(new SpeedLimit(speed, location));
+                        continue;
+                    }
+
+                    int count = trackLimit.trackLimits.Count - 1;
+                    var prevLocation = trackLimit.trackLimits[count].Location;
+                    var prevSpeed = trackLimit.trackLimits[count].Limit;
+
+                    if (prevLocation + Config.TrainLength + 200 > location
+                        && prevSpeed > speed)
+                    {
+                        trackLimit.trackLimits[count].Limit = speed;
+                        continue;
+                    }
+
+                    trackLimit.trackLimits.Add(new SpeedLimit(speed, location));
+
+                }
+                speedLimReady = true;
+            }
 
             if (UrbalisAts.initTimeMode == true)
             { 
@@ -190,6 +222,9 @@ namespace UrbalisAts.OBCU {
                     ebSpeed = Math.Max(ebSpeed, Config.ReleaseSpeed);
                     recommendSpeed = Math.Max(recommendSpeed, Config.ReleaseSpeed - Config.RecommendSpeedOffset);
                 }
+
+                ebSpeed = RoundSpeed(ebSpeed);
+                recommendSpeed = RoundSpeed(recommendSpeed);
             }
 
             if (targetSpeed < ebSpeed && UrbalisAts.panel_[18] == 0 && UrbalisAts.driveMode == 1)
@@ -676,7 +711,7 @@ namespace UrbalisAts.OBCU {
             tickResult.HandleCommandSet = new HandleCommandSet(powerCommand, brakeCommand, reverserCommand, constantSpeedCommand);
 
             // 刷新HMI, TDT, 信号机材质，为了减少对FPS影响把它限制到最多一秒十次
-            if (hHMITex.HasEnoughTimePassed(10)) {
+            if (hHMITex.HasEnoughTimePassed(5)) {
                 hHMITex.Update(TGMTPainter.PaintHMI(state));
                 hTDTTex.Update(TGMTPainter.PaintTDT(state));
                 hHMI2Tex.Update(TGMTPainter.PaintHMI2(state, handles));
@@ -707,7 +742,7 @@ namespace UrbalisAts.OBCU {
 
             if (panel_[50] == 1) atsSound1.Play();
 
-            panel_[240] = mapPlugin.doorSide;
+            
 
             return tickResult;
         }
@@ -783,6 +818,13 @@ namespace UrbalisAts.OBCU {
             
 
 
+        }
+
+        public static double RoundSpeed(double speed)
+        {
+            double speed_ = Math.Round(speed);
+
+            return speed_;
         }
     }
 }

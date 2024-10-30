@@ -87,9 +87,9 @@ namespace UrbalisAts.OBCU{
                         VBCount = FBCount = 1;
                     }
                     break;
-                case 96810:
-                    trackLimit.SetBeacon(e);
-                    break;
+                //case 96810:
+                //    trackLimit.SetBeacon(e);
+                //    break;
                 case 96824:
                     UrbalisAts.panel_[200] = e.Optional;
                     UrbalisAts.Log("下一车站站号：" + UrbalisAts.panel_[200].ToString());

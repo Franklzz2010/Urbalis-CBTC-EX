@@ -58,6 +58,7 @@ namespace UrbalisAts.OBCU {
             this.Name = "DebugWindow";
             this.Text = "TGMT Debug Window";
             this.TopMost = true;
+            this.Load += new System.EventHandler(this.DebugWindow_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

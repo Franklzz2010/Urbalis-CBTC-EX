@@ -10,6 +10,7 @@ using System.IO;
 using System.Collections.Generic;
 using AtsEx.PluginHost.MapStatements;
 using AtsEx.Extensions.ContextMenuHacker;
+using System.Linq;
 
 
 
@@ -27,7 +28,8 @@ namespace UrbalisAts.WCU {
         public int depTime { get; set; } = 0;
         public bool isPass { get; set; } = false;
         public int stopPos { get; set; } = 0;
-        public List<int> speedLimitList { get; set; } = new List<int>();
+        public static List<int> speedLimitList  = new List<int>();
+        public static List<int> speedLimitPosList = new List<int>();
 
         private List<SignalPatch> SignalPatch = new List<SignalPatch>();
         private Train Train;
@@ -35,6 +37,7 @@ namespace UrbalisAts.WCU {
         private SectionManager sectionManager;
         private Station Station;
 
+        public static bool PluginReady;
 
         public PluginMain(PluginBuilder builder) : base(builder) {
             Plugins.AllPluginsLoaded += OnAllPluginsLoaded;
@@ -43,6 +46,7 @@ namespace UrbalisAts.WCU {
 
         private void OnAllPluginsLoaded(object sender, EventArgs e) {
             MovementAuthority = OBCULevel = 0;
+            PluginReady = false;
         }
 
 
@@ -62,6 +66,9 @@ namespace UrbalisAts.WCU {
                     && sectionManager.Sections[pointer].Location < Config.TGMTTerrtoryEnd) ? (OBCULevel == 2) ? (int)Config.CTCSignalIndex : source : source));
                 ++pointer;
             }
+
+
+            PluginReady = false;
                 
         }
 
@@ -91,13 +98,50 @@ namespace UrbalisAts.WCU {
 
             
             var nextSta = BveHacker.Scenario.Route.Stations[BveHacker.Scenario.Route.Stations.CurrentIndex + 1] as Station;
-            doorSide = nextSta.DoorSide;
-            depTime = nextSta.DepartureTimeMilliseconds;
-            isPass = nextSta.Pass;
-            stopPos = Convert.ToInt32(nextSta.Location);
+            if (nextSta.DoorSide != 0 && !nextSta.Pass || (nextSta.DoorSide == 0 && nextSta.Pass))
+            {
+                doorSide = nextSta.DoorSide;
+                isPass = nextSta.Pass;
+                if (isPass) depTime = 0;
+                else depTime = nextSta.DepartureTimeMilliseconds;
 
-            var trackInfo = BveHacker.Scenario.Route.SpeedLimits;
+                stopPos = Convert.ToInt32(nextSta.Location);
+            }
+                
 
+
+            var trackInfo = BveHacker.Scenario.Route.SpeedLimits.Src;
+
+
+            if (!PluginReady)
+            {
+                for (int i = 0; i < trackInfo.Count; i++)
+                {
+                    int speed;
+                    var fieldType = trackInfo[i].GetType();
+                    FieldInfo speedInfo = fieldType.GetField("a", BindingFlags.NonPublic | BindingFlags.Instance);
+                    var speedvalue = speedInfo.GetValue(trackInfo[i]);
+
+
+                    if (speedvalue * 3.6 > 95) speed = 95;
+                    else speed = Convert.ToInt32(speedvalue * 3.6);
+
+
+                    FieldInfo[] locInfo = fieldType.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+                    var locValue = locInfo[1].GetValue(trackInfo[i]);
+
+                    int distance = Convert.ToInt32(locValue);
+
+                    if (speedLimitList.Count == 0 || speed != speedLimitList.Last())
+                    {
+                        speedLimitList.Add(speed);
+                        speedLimitPosList.Add(distance);
+
+                    }
+                }
+
+                PluginReady = true;
+            }
 
 
             return new MapPluginTickResult();

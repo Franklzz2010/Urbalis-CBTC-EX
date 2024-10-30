@@ -14,6 +14,8 @@ using SlimDX.DirectInput;
 using System.Security.Cryptography;
 using System.Text;
 using UrbalisAts.OBCU.UserInterface;
+using AtsEx.Extensions.ConductorPatch;
+using BveTypes.ClassWrappers;
 
 namespace UrbalisAts.OBCU {
     public partial class UrbalisAts : AssemblyPluginBase {
@@ -74,6 +76,9 @@ namespace UrbalisAts.OBCU {
         public static Msg msg1 = new Msg();
         public static Msg msg2 = new Msg();
         public static Msg msg3 = new Msg();
+
+        public static Conductor conductor = new Conductor();
+
 
         static UrbalisAts() {
             Config.Load(Path.Combine(Config.PluginDir, "TGMTConfig.txt"));

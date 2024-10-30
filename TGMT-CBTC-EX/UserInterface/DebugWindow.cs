@@ -70,5 +70,10 @@ namespace UrbalisAts.OBCU {
             if (d >= Config.LessInf) return "Inf";
             return d.ToString();
         }
+
+        private void DebugWindow_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

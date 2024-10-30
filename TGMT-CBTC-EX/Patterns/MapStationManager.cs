@@ -41,7 +41,7 @@ namespace UrbalisAts.OBCU
                     NextStation.DoorOpenType = 1;
                     break;
             }
-
+            
             NextStation.RouteOpenTime = NextStation.DepartureTime = UrbalisAts.mapPlugin.depTime;
 
             NextStation.Pass = UrbalisAts.mapPlugin.isPass;
@@ -69,6 +69,11 @@ namespace UrbalisAts.OBCU
                 Stopped = false;
                 Arrived = false;
                 UrbalisAts.Log("已出站");
+            }
+            if (state.Speed > 0 && state.Location < NextStation.StopPosition - Config.StationStartDistance)
+            {
+                Stopped = false;
+                Arrived = false;
             }
 
         }
