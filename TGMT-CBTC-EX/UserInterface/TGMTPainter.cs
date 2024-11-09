@@ -56,6 +56,8 @@ namespace UrbalisAts.OBCU {
             bmconfirm = new Bitmap(Path.Combine(imgDir, "bmconfirm.png"));
             menuext = new Bitmap(Path.Combine(imgDir, "menuext.png"));
             crewnumenter = new Bitmap(Path.Combine(imgDir, "crewnumenter.png"));
+            sUp = new Bitmap(Path.Combine(imgDir, "sUp.png"));
+            sDown = new Bitmap(Path.Combine(imgDir, "sDown.png"));
 
             drawFont = new System.Drawing.Font("思源黑体 CN Bold", 30);
             timeFont = new System.Drawing.Font("思源黑体 CN Bold", 15);
@@ -124,9 +126,9 @@ namespace UrbalisAts.OBCU {
 
             if (UrbalisAts.selectingMode == -1 && UrbalisAts.ackMessage == 0)
             {
-                hHMI.DrawImage(msg, 115, 480, UrbalisAts.msg1.MsgID * 18, 18);
-                hHMI.DrawImage(msg, 115, 501, UrbalisAts.msg2.MsgID * 18, 18);
-                hHMI.DrawImage(msg, 115, 522, UrbalisAts.msg3.MsgID * 18, 18);
+                hHMI.DrawImage(msg, 115, 480, MsgManager.msg1.MsgID * 18, 18);
+                hHMI.DrawImage(msg, 115, 501, MsgManager.msg2.MsgID * 18, 18);
+                hHMI.DrawImage(msg, 115, 522, MsgManager.msg3.MsgID * 18, 18);
             }
             
 
@@ -166,6 +168,9 @@ namespace UrbalisAts.OBCU {
 
             if (UrbalisAts.panel_[51] == 1) hHMI.DrawImage(menuext, 479, 9);
 
+            if (MsgManager.canDown) hHMI.DrawImage(sUp, 357, 449);
+            if (MsgManager.canUp) hHMI.DrawImage(sDown, 357, 522);
+
             hHMI.EndGDI();
 
             var stringC = new StringFormat();
@@ -182,9 +187,9 @@ namespace UrbalisAts.OBCU {
 
             if (UrbalisAts.selectingMode == -1 && UrbalisAts.ackMessage == 0)
             {
-                hHMI.Graphics.DrawString(UrbalisAts.msg1.MsgTime, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 83, 479, stringC);
-                hHMI.Graphics.DrawString(UrbalisAts.msg2.MsgTime, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 83, 499, stringC);
-                hHMI.Graphics.DrawString(UrbalisAts.msg3.MsgTime, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 83, 519, stringC);
+                hHMI.Graphics.DrawString(MsgManager.msg1.MsgTime, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 83, 479, stringC);
+                hHMI.Graphics.DrawString(MsgManager.msg2.MsgTime, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 83, 499, stringC);
+                hHMI.Graphics.DrawString(MsgManager.msg3.MsgTime, timeFont, new SolidBrush(Color.FromArgb(199, 199, 198)), 83, 519, stringC);
             }
 
             hHMI.Graphics.FillRectangle(overspeed[UrbalisAts.panel_[10]], new Rectangle(20, 18, 80, 78));
@@ -773,7 +778,7 @@ namespace UrbalisAts.OBCU {
         static Brush[] targetColor = new Brush[] { new SolidBrush(Color.Red), new SolidBrush(Color.Orange), new SolidBrush(Color.Green) };
         static Brush[] overspeed = new Brush[] { new SolidBrush(Color.Empty), new SolidBrush(Color.Orange), new SolidBrush(Color.Red) };
         static Bitmap hmi, ackcmd, atoctrl, dormode, dorrel, drvmode, emergency, fault, departure, menu,
-            selmode, sigmode, special, stopsig, num0, numn0, colon, hmitdt, life, distance, msg, rmpanel, bmconfirm, menuext, crewnumenter;
+            selmode, sigmode, special, stopsig, num0, numn0, colon, hmitdt, life, distance, msg, rmpanel, bmconfirm, menuext, crewnumenter, sUp, sDown;
         static Bitmap tdtbackoff, tdtbackred, tdtbackgreen;
         static Bitmap hmi2, dooropenleft, dooropenright, trainkey, traindir1, traindir2, hmi2Green, hmi2Red, hmi2Yellow;
         static Image tdtdigitsred, tdtdigitsgreen;

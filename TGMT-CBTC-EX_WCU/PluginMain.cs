@@ -102,17 +102,14 @@ namespace UrbalisAts.WCU {
             
             var nextSta = BveHacker.Scenario.Route.Stations[BveHacker.Scenario.Route.Stations.CurrentIndex + 1] as Station;
             var destSta = BveHacker.Scenario.Route.Stations[BveHacker.Scenario.Route.Stations.Count - 1] as Station;
-            if (nextSta.DoorSide != 0 && !nextSta.Pass || (nextSta.DoorSide == 0 && nextSta.Pass))
-            {
-                doorSide = nextSta.DoorSide;
-                isPass = nextSta.Pass;
-                if (isPass) depTime = 0;
-                else depTime = nextSta.DepartureTimeMilliseconds;
+            isPass = nextSta.Pass;
+            doorSide = nextSta.DoorSide;
+            if (isPass) depTime = 0;
+            else depTime = nextSta.DepartureTimeMilliseconds;
+            stopPos = Convert.ToInt32(nextSta.Location);
 
-                stopPos = Convert.ToInt32(nextSta.Location);
-            }
-            
-            nextStaName = nextSta.Name;
+            if (isPass) nextStaName = "P" + nextSta.Name;
+            else nextStaName = nextSta.Name;
             destStaName = destSta.Name;
 
             var trackInfo = BveHacker.Scenario.Route.SpeedLimits.Src;

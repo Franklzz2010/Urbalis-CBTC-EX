@@ -34,17 +34,8 @@ namespace UrbalisAts.OBCU
 
         public static void Update(AtsEx.PluginHost.Native.VehicleState state, bool doorState)
         {
-            switch (UrbalisAts.mapPlugin.doorSide)
-            {
-                case 1:
-                    NextStation.DoorOpenType = 2;
-                    break;
-                case -1:
-                    NextStation.DoorOpenType = 1;
-                    break;
-            }
 
-            if (state.Location > UrbalisAts.mapPlugin.stopPos - 1000)
+            if (!Arrived || doorState)
             {
                 NextStation.RouteOpenTime = NextStation.DepartureTime = UrbalisAts.mapPlugin.depTime;
 
@@ -52,6 +43,15 @@ namespace UrbalisAts.OBCU
 
                 NextStation.StopPosition = UrbalisAts.mapPlugin.stopPos;
 
+                switch (UrbalisAts.mapPlugin.doorSide)
+                {
+                    case 1:
+                        NextStation.DoorOpenType = 2;
+                        break;
+                    case -1:
+                        NextStation.DoorOpenType = 1;
+                        break;
+                }
             }
 
 

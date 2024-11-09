@@ -46,7 +46,7 @@ namespace UrbalisAts.OBCU {
 
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.A1].Pressed += OnA1Pressed;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.B1].Pressed += OnB1Pressed;
-            Native.NativeKeys.AtsKeys[NativeAtsKeyName.B2].Pressed += OnB2Pressed;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.S].Pressed += OnSPressed;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.K].Pressed += OnKPressed;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.L].Pressed += OnLPressed;
 
@@ -69,6 +69,9 @@ namespace UrbalisAts.OBCU {
 
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.C1].Pressed += OnC1Pressed;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.C2].Pressed += OnC2Pressed;
+
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.A2].Pressed += OnA2Pressed;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.B2].Pressed += OnB2Pressed;
 
             Native.BeaconPassed += SetBeaconData;
             Native.DoorClosed += DoorClose;
@@ -130,13 +133,8 @@ namespace UrbalisAts.OBCU {
             }
 
             if (UrbalisAts.initTimeMode == true)
-            { 
-                msg1.MsgTime = msg2.MsgTime = msg3.MsgTime = TimeFormatter.MiliSecondToShortString(state.Time.TotalMilliseconds);
-
-                msg1.MsgID = 1;
-                msg2.MsgID = 13;
-                msg3.MsgID = 12;
-
+            {
+                MsgManager.Initialize(state);
                 UrbalisAts.initTimeMode = false;
             }
 
@@ -252,9 +250,6 @@ namespace UrbalisAts.OBCU {
                     ebSpeed = Math.Max(ebSpeed, Config.ReleaseSpeed);
                     recommendSpeed = Math.Max(recommendSpeed, Config.ReleaseSpeed - Config.RecommendSpeedOffset);
                 }
-
-                ebSpeed = RoundSpeed(ebSpeed);
-                recommendSpeed = RoundSpeed(recommendSpeed);
             }
 
             if (targetSpeed < ebSpeed && UrbalisAts.panel_[18] == 0 && UrbalisAts.driveMode == 1)
@@ -356,9 +351,9 @@ namespace UrbalisAts.OBCU {
 
             panel_[11] = distanceToPixel(targetDistance);
             panel_[19] = (int)targetDistance;
-            panel_[16] = (int)(ebSpeed * speedMultiplier);
+            panel_[16] = RoundSpeed(ebSpeed * speedMultiplier);
             if (driveMode < 2) {
-                panel_[15] = (int)(recommendSpeed * speedMultiplier);
+                panel_[15] = RoundSpeed(recommendSpeed * speedMultiplier);
             } else {
                 panel_[15] = -1;
             }
@@ -444,7 +439,7 @@ namespace UrbalisAts.OBCU {
                     }
                 }   else if (Ato.IsAvailable()) {
                         // 闪烁
-                        atsPanel40.Value = time % 500 < 250 ? 1 : 0;
+                        atsPanel40.Value = TGMTPainter.counter % 2;
                     }
                 if (driveMode <= 1)
                 {
@@ -494,7 +489,7 @@ namespace UrbalisAts.OBCU {
                     // 超出制动干预速度
                     if (ebState == 0)
                     {
-                        updateMsg(5, state);
+                        MsgManager.SetMsg(5, state);
                         atsSound0.Play();
                     }
                     ebState = 1;
@@ -523,7 +518,7 @@ namespace UrbalisAts.OBCU {
                 {
                     if (ebState == 0)
                     {
-                        updateMsg(9, state);
+                        MsgManager.SetMsg(9, state);
                         atsSound2.Stop();
                         atsSound2.Play();
                         ebState = 1;
@@ -851,27 +846,12 @@ namespace UrbalisAts.OBCU {
                 panel_[12] = 0; panel_[13] = 0; panel_[14] = 1;
             }
         }
-
-        public void updateMsg(int msgnumber, AtsEx.PluginHost.Native.VehicleState state)
+        public static int RoundSpeed(double speed)
         {
+            speed = Math.Round(speed / 4);
+
+            int speed_ = Convert.ToInt32(speed * 4);
             
-            msg3.MsgTime= msg2.MsgTime;
-            msg2.MsgTime = msg1.MsgTime;
-
-            msg3.MsgID = msg2.MsgID;
-            msg2.MsgID = msg1.MsgID;
-            
-            msg1.MsgTime = TimeFormatter.MiliSecondToShortString(state.Time.TotalMilliseconds);
-            msg1.MsgID = msgnumber;
-            
-
-
-        }
-
-        public static double RoundSpeed(double speed)
-        {
-            double speed_ = Math.Round(speed);
-
             return speed_;
         }
     }

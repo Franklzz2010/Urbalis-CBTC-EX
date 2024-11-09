@@ -34,6 +34,21 @@ namespace UrbalisAts.OBCU.UserInterface
                 }
             }
 
+            if (e.X >= 357 && e.X <= 396)
+            {
+                if (MsgManager.canUp && e.Y >= 522 && e.Y <= 569)
+                {
+                    MsgManager.page++;
+                    MsgManager.UpdateMsg();
+                }
+                else if (MsgManager.canDown && e.Y >= 449 && e.Y <= 495)
+                {
+                    MsgManager.page--;
+                    MsgManager.UpdateMsg();
+                }
+
+            }
+
             //司机号输入
             if (e.X >= 668 && e.X <= 779 && e.Y >= 16 && e.Y <= 68 && UrbalisAts.panel_[23] == 0 && UrbalisAts.panel_[51] == 0)
             {

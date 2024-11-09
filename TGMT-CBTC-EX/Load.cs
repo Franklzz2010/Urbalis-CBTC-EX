@@ -73,9 +73,6 @@ namespace UrbalisAts.OBCU {
         public static TouchTextureHandle hHMITex;
         public static TextureHandle hHMI2Tex;
 
-        public static Msg msg1 = new Msg();
-        public static Msg msg2 = new Msg();
-        public static Msg msg3 = new Msg();
 
         public static ConductorManager Conductor = null;
         public static ConductorPatch Patch = null;
@@ -157,7 +154,7 @@ namespace UrbalisAts.OBCU {
 
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.A1].Pressed -= OnA1Pressed;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.B1].Pressed -= OnB1Pressed;
-            Native.NativeKeys.AtsKeys[NativeAtsKeyName.B2].Pressed -= OnB2Pressed;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.S].Pressed -= OnSPressed;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.K].Pressed -= OnKPressed;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.L].Pressed -= OnLPressed;
 
@@ -180,6 +177,9 @@ namespace UrbalisAts.OBCU {
 
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.C1].Pressed -= OnC1Pressed;
             Native.NativeKeys.AtsKeys[NativeAtsKeyName.C2].Pressed -= OnC2Pressed;
+
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.A2].Pressed -= OnA2Pressed;
+            Native.NativeKeys.AtsKeys[NativeAtsKeyName.B2].Pressed -= OnB2Pressed;
 
             Native.BeaconPassed -= SetBeaconData;
             Native.DoorClosed -= DoorClose;

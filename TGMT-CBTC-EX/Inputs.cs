@@ -25,7 +25,7 @@ namespace UrbalisAts.OBCU{
                 driveMode = 2;
             }
         }
-        private void OnB2Pressed(object sender, EventArgs e) {
+        private void OnSPressed(object sender, EventArgs e) {
             switch (ackMessage) {
                 case 2:
                     // 释放速度
@@ -89,6 +89,14 @@ namespace UrbalisAts.OBCU{
         private void OnC2Pressed(object sender, EventArgs e)
         {
             if (doorMode > 1) doorMode--;
+        }
+        private void OnA2Pressed(object sender, EventArgs e)
+        {
+
+        }
+        private void OnB2Pressed(object sender, EventArgs e)
+        {
+
         }
 
         private void OnA1Up(object sender, EventArgs e) => a1Down = false;

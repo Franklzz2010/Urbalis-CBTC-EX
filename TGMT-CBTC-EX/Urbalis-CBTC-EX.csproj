@@ -71,7 +71,7 @@
       <DependentUpon>DebugWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="UserInterface\GDIWrapper.cs" />
-    <Compile Include="UserInterface\Msg.cs" />
+    <Compile Include="UserInterface\MsgManager.cs" />
     <Compile Include="UserInterface\TGMTPainter.cs" />
     <Compile Include="UserInterface\Touch.cs" />
   </ItemGroup>
